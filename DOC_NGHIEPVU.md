@@ -112,10 +112,10 @@ Dưới đây là sơ đồ dòng chảy nghiệp vụ từ Khách hàng đến 
 - **Đáp án:**
   > *"Dạ thưa Thầy/Cô, trong ngành mỹ phẩm, các sản phẩm luôn đi kèm nhiều lựa chọn về Dung tích (150ml, 500ml) hoặc Màu sắc. Nếu lưu đơn lẻ thì sẽ tạo ra hàng loạt sản phẩm trùng tên làm nhiễu người dùng. Việc tách thành Biến thể giúp gom nhóm sản phẩm về một trang chi tiết duy nhất, đồng thời cho phép quản lý giá bán riêng và số lượng tồn kho chính xác cho từng biến thể ạ."*
 
-#### ❓ Câu 2: Bài toán mua tranh hết hàng (Race Condition) trong hệ thống của em được xử lý bằng nghiệp vụ gì?
-- **Đáp án:**
-  > *"Dạ thưa Thầy/Cô, hệ thống xử lý bằng nghiệp vụ **Database Transaction kết hợp khóa dòng `FOR UPDATE` trong MySQL**.*
-  > *Khi khách bấm Đặt hàng, backend mở Transaction và khóa dòng biến thể đó lại. Nếu số lượng tồn kho đủ thì mới cho trừ kho và ghi đơn hàng (Commit). Nếu hết hàng, hệ thống hủy giao tác (Rollback) và báo lỗi. Nhờ đó ngăn chặn tuyệt đối việc bán quá tồn kho thực tế ạ."*
+#### ❓ Câu 2: Bài toán mua trùng hết hàng (Xử lý tồn kho) trong hệ thống của em được xử lý như thế nào?
+- **Đáp án siêu ngắn gọn (Thuộc nằm lòng 1 câu):**
+  > *"Dạ thưa Thầy/Cô, hệ thống xử lý bằng cách **Kiểm tra tồn kho trước khi cho đặt hàng**: Khi khách bấm Đặt hàng, server sẽ kiểm tra số lượng tồn trong CSDL, nếu đủ hàng thì mới trừ kho và tạo đơn, còn nếu hết hàng thì hệ thống tự động báo lỗi hết hàng và hủy đơn ạ!"*
+
 
 #### ❓ Câu 3: Nghiệp vụ Cảnh báo Tồn kho nhãn đỏ được quy định với con số bao nhiêu và tại sao?
 - **Đáp án:**
