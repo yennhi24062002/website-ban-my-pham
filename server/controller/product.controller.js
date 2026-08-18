@@ -58,19 +58,50 @@ function nhanDangLuachon(row) {
 }
 
 async function layDanhSachSanPham() {
-  const [sanPhamRows] = await db.query(
-    `SELECT p.*, dm.tendanhmuc, th.tenthuonghieu, tk.soluongton,
-            k.makhuyenmai, k.tenkhuyenmai, k.phantramgiam
-     FROM sanpham p
-     JOIN danhmuc dm ON dm.madanhmuc = p.madanhmuc
-     LEFT JOIN thuonghieu th ON th.mathuonghieu = p.mathuonghieu
-     LEFT JOIN tonkho tk ON tk.masanpham = p.masanpham
-     LEFT JOIN sanpham_khuyenmai ks ON p.masanpham = ks.masanpham
-     LEFT JOIN khuyenmai k ON ks.makhuyenmai = k.makhuyenmai
-       AND k.trangthai = 'hoatdong'
-       AND NOW() BETWEEN k.ngaybatdau AND k.ngayketthuc
-     ORDER BY p.masanpham ASC`
-  );
+  // Thu query voi khuyenmai JOIN, neu loi (bang chua ton tai) thi fallback
+  let sanPhamRows;
+  try {
+    [sanPhamRows] = await db.query(
+      `SELECT p.*, dm.tendanhmuc, th.tenthuonghieu, tk.soluongton,
+              k.makhuyenmai, k.tenkhuyenmai, k.phantramgiam
+       FROM sanpham p
+       JOIN danhmuc dm ON dm.madanhmuc = p.madanhmuc
+       LEFT JOIN thuonghieu th ON th.mathuonghieu = p.mathuonghieu
+       LEFT JOIN tonkho tk ON tk.masanpham = p.masanpham
+       LEFT JOIN sanpham_khuyenmai ks ON p.masanpham = ks.masanpham
+       LEFT JOIN khuyenmai k ON ks.makhuyenmai = k.makhuyenmai
+         AND k.trangthai = 'hoatdong'
+         AND NOW() BETWEEN k.ngaybatdau AND k.ngayketthuc
+       ORDER BY p.masanpham ASC`
+    );
+  } catch (e1) {
+    // Fallback: thu voi ten bang cu (khuyenmai_sanpham - local MySQL)
+    try {
+      [sanPhamRows] = await db.query(
+        `SELECT p.*, dm.tendanhmuc, th.tenthuonghieu, tk.soluongton,
+                k.makhuyenmai, k.tenkhuyenmai, k.phantramgiam
+         FROM sanpham p
+         JOIN danhmuc dm ON dm.madanhmuc = p.madanhmuc
+         LEFT JOIN thuonghieu th ON th.mathuonghieu = p.mathuonghieu
+         LEFT JOIN tonkho tk ON tk.masanpham = p.masanpham
+         LEFT JOIN khuyenmai_sanpham ks ON p.masanpham = ks.masanpham
+         LEFT JOIN khuyenmai k ON ks.makhuyenmai = k.makhuyenmai
+           AND k.trangthai = 'hoatdong'
+           AND NOW() BETWEEN k.ngaybatdau AND k.ngayketthuc
+         ORDER BY p.masanpham ASC`
+      );
+    } catch (e2) {
+      // Fallback cuoi: khong co khuyenmai
+      [sanPhamRows] = await db.query(
+        `SELECT p.*, dm.tendanhmuc, th.tenthuonghieu, tk.soluongton
+         FROM sanpham p
+         JOIN danhmuc dm ON dm.madanhmuc = p.madanhmuc
+         LEFT JOIN thuonghieu th ON th.mathuonghieu = p.mathuonghieu
+         LEFT JOIN tonkho tk ON tk.masanpham = p.masanpham
+         ORDER BY p.masanpham ASC`
+      );
+    }
+  }
 
   let variantRows = [];
   try {

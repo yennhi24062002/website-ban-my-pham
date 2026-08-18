@@ -289,7 +289,9 @@ export const sanPhams = [
     tileban: 72,
     khuyenmai: "Mua 1 tặng 1 túi vải MAC chính hãng",
     luachon: [
-      { maluachon: 16, mausac: "Ruby Woo", loai: "Son lì", dungtich: "3g", giaban: 580000, soluongton: 20, hinh: "/hinhanh/son.png" }
+      { maluachon: 16, mausac: "Ruby Woo", loai: "Son lì", dungtich: "3g", giaban: 580000, soluongton: 15, hinh: "/hinhanh/son.png" },
+      { maluachon: 18, mausac: "Russian Red", loai: "Son lì", dungtich: "3g", giaban: 580000, soluongton: 12, hinh: "/hinhanh/son.png" },
+      { maluachon: 19, mausac: "Diva", loai: "Son lì", dungtich: "3g", giaban: 580000, soluongton: 10, hinh: "/hinhanh/son.png" }
     ]
   },
   {
@@ -307,7 +309,10 @@ export const sanPhams = [
     tileban: 88,
     khuyenmai: "Mua 2 cây son 3CE giảm thêm 50K",
     luachon: [
-      { maluachon: 17, mausac: "Nhiều màu", loai: "Son kem", dungtich: "4g", giaban: 320000, soluongton: 30, hinh: "/hinhanh/son_3ce_lipstick.png" }
+      { maluachon: 17, mausac: "Denim", loai: "Son kem", dungtich: "4g", giaban: 320000, soluongton: 15, hinh: "/hinhanh/son_3ce_lipstick.png" },
+      { maluachon: 20, mausac: "Over Dose", loai: "Son kem", dungtich: "4g", giaban: 320000, soluongton: 12, hinh: "/hinhanh/son_3ce_lipstick.png" },
+      { maluachon: 21, mausac: "Berry", loai: "Son kem", dungtich: "4g", giaban: 320000, soluongton: 10, hinh: "/hinhanh/son_3ce_lipstick.png" },
+      { maluachon: 22, mausac: "Coral", loai: "Son kem", dungtich: "4g", giaban: 320000, soluongton: 8, hinh: "/hinhanh/son_3ce_lipstick.png" }
     ]
   }
 ];
