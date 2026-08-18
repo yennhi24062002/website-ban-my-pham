@@ -122,15 +122,20 @@ async function sendOrderConfirmationEmail(order, items, userEmail) {
         });
         console.log(`[Email] Sử dụng Brevo SMTP...`);
       } else {
-        // Fallback: Gmail App Password
+        // Fallback: Gmail App Password qua cổng 465 SSL bảo mật cao
         transporter = nodemailer.createTransport({
-          service: "gmail",
+          host: "smtp.gmail.com",
+          port: 465,
+          secure: true,
           auth: {
             user: EMAIL_USER,
             pass: EMAIL_PASS
+          },
+          tls: {
+            rejectUnauthorized: false
           }
         });
-        console.log(`[Email] Sử dụng Gmail SMTP...`);
+        console.log(`[Email] Sử dụng Gmail SMTP (smtp.gmail.com:465)...`);
       }
 
       const mailOptions = {
