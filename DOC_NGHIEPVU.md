@@ -5,38 +5,106 @@
 ---
 
 ## MỤC LỤC
-1. [TỔNG QUAN HỆ THỐNG & DỰ ÁN](#1-tong-quan)
-2. [CHI TIẾT MÃ NGUỒN CÁC LUỒNG NGHIỆP VỤ (CODE TRỰC TIẾP & GIẢI THÍCH)](#2-chi-tiet-nghiep-vu)
+1. [TỔNG QUAN HỆ THỐNG & ĐẠT CHUẨN MÔ HÌNH 3 LỚP](#1-tong-quan)
+2. [CƠ SỞ DỮ LIỆU CHUẨN 3NF (SQL SCHEMAS BAN ĐẦU)](#2-sql-schemas)
+3. [CHI TIẾT 14 CHỨC NĂNG NGHIỆP VỤ - CODE TRỰC TIẾP & GIẢI THÍCH TỪNG DÒNG](#3-chi-tiet-14-chuc-nang)
    - [Luồng 1: Đăng ký & Đăng nhập tài khoản (auth.controller.js)](#luong-1)
    - [Luồng 2: Xem danh mục, Lọc & Tìm kiếm mỹ phẩm (product.controller.js)](#luong-2)
-   - [Luồng 3: Chi tiết Mỹ phẩm & Biến thể dung tích / màu son (product.controller.js)](#luong-3)
+   - [Luồng 3: Xem chi tiết Mỹ phẩm & Chọn biến thể 150ml/500ml/Màu son (product.controller.js)](#luong-3)
    - [Luồng 4: Quản lý Giỏ hàng (cart.controller.js)](#luong-4)
-   - [Luồng 5: Áp dụng Voucher giảm giá (voucher.controller.js)](#luong-5)
-   - [Luồng 6: Đặt hàng & Thanh toán VietQR Ngân hàng (order.controller.js)](#luong-6)
-   - [Luồng 7: GIAO TÁC TRỪ KHO AN TOÀN - XỬ LÝ MUA ĐỒNG THỜI (RACE CONDITION FOR UPDATE)](#luong-7)
-   - [Luồng 8: GỬI EMAIL XÁC NHẬN ĐƠN HÀNG TỰ ĐỘNG (utils/email.js)](#luong-8)
-   - [Luồng 9: Xem Lịch sử Đơn hàng & Trạng thái đơn (order.controller.js)](#luong-9)
-   - [Luồng 10: Yêu cầu Trả hàng / Hoàn tiền (return.controller.js)](#luong-10)
-   - [Luồng 11: Quản lý Kho hàng & Cảnh báo Nhãn đỏ <= 5 (product.controller.js)](#luong-11)
-   - [Luồng 12: Nhập thêm hàng tồn kho thủ công (admin.controller.js)](#luong-12)
-   - [Luồng 13: Duyệt đơn đa bước & Auto-Approve CronJob 10p (order.controller.js)](#luong-13)
+   - [Luồng 5: Quản lý & Áp dụng Voucher giảm giá (voucher.controller.js)](#luong-5)
+   - [Luồng 6: Đặt hàng & Thanh toán QR Ngân hàng VietQR (order.controller.js)](#luong-6)
+   - [Luồng 7: GIAO TÁC TRỪ KHO AN TOÀN - XỬ LÝ MUA ĐỒNG THỜI (RACE CONDITION LOCK FOR UPDATE)](#luong-7)
+   - [Luồng 8: TỰ ĐỘNG GỬI EMAIL XÁC NHẬN ĐƠN HÀNG (utils/email.js)](#luong-8)
+   - [Luồng 9: Xem Lịch sử Đơn hàng & Theo dõi Trạng thái đơn (order.controller.js)](#luong-9)
+   - [Luồng 10: Gửi Yêu cầu Trả hàng / Hoàn tiền (return.controller.js)](#luong-10)
+   - [Luồng 11: Quản lý Kho hàng & Cảnh báo Nhãn đỏ Tồn kho <= 5 (product.controller.js)](#luong-11)
+   - [Luồng 12: Nhập thêm số lượng hàng tồn kho thủ công (admin.controller.js)](#luong-12)
+   - [Luồng 13: Duyệt đơn hàng đa bước & Auto-Approve CronJob 10 phút (order.controller.js)](#luong-13)
    - [Luồng 14: Thống kê Doanh thu & Top 5 Mỹ phẩm bán chạy (admin.controller.js)](#luong-14)
-3. [BỘ CÂU HỎI Q&A TRẢ LỜI HỘI ĐỒNG BẢO VỆ KHÓA LUẬN](#3-qa)
+4. [BỘ CÂU HỎI Q&A TRẢ LỜI HỘI ĐỒNG BẢO VỆ KHÓA LUẬN](#4-qa)
 
 ---
 
 <a id="1-tong-quan"></a>
 ## 1. TỔNG QUAN HỆ THỐNG
 
-Hệ thống Website Bán Mỹ Phẩm được xây dựng theo **Mô hình 3 Lớp (3-Tier Architecture)**:
-- **Frontend:** ReactJS (Single Page Application, Context API, Relative API Base `/api`).
-- **Backend:** Node.js Express RESTful API (Vercel Serverless Function Engine).
-- **Database:** TiDB Cloud Serverless (Chuẩn MySQL 8.0 Protocol, AWS Singapore).
+Hệ thống Website Bán Mỹ Phẩm được thiết kế theo **Mô hình 3 Lớp (3-Tier Architecture)**:
+- **Frontend Layer:** ReactJS (Single Page Application, Context API, Relative API Base `/api`).
+- **Backend Layer:** Node.js Express RESTful API (Vercel Serverless Function Engine).
+- **Database Layer:** TiDB Cloud Serverless (MySQL 8.0 Compatible Wire Protocol, AWS Singapore).
 
 ---
 
-<a id="2-chi-tiet-nghiep-vu"></a>
-## 2. CHI TIẾT MÃ NGUỒN CÁC LUỒNG NGHIỆP VỤ (CODE TRỰC TIẾP & GIẢI THÍCH)
+<a id="2-sql-schemas"></a>
+## 2. CƠ SỞ DỮ LIỆU CHUẨN 3NF (SQL SCHEMAS BAN ĐẦU)
+
+Cơ sở dữ liệu gồm 21 bảng quan hệ chuẩn 3NF. Dưới đây là các cấu trúc bảng cốt lõi:
+
+```sql
+-- 1. Bảng NGUOIDUNG (Tài khoản)
+CREATE TABLE nguoidung (
+    manguoidung INT AUTO_INCREMENT PRIMARY KEY,
+    mavaitro INT NOT NULL,
+    hoten VARCHAR(150) NOT NULL,
+    sodienthoai VARCHAR(20) UNIQUE NOT NULL,
+    email VARCHAR(150) UNIQUE NOT NULL,
+    matkhau VARCHAR(255) NOT NULL,
+    trangthai VARCHAR(30) DEFAULT 'hoatdong',
+    ngaytao DATETIME DEFAULT CURRENT_TIMESTAMP
+);
+
+-- 2. Bảng SANPHAM (Mỹ phẩm)
+CREATE TABLE sanpham (
+    masanpham INT AUTO_INCREMENT PRIMARY KEY,
+    madanhmuc INT NOT NULL,
+    tensanpham VARCHAR(255) NOT NULL,
+    mota TEXT,
+    giaban DECIMAL(12,2) NOT NULL DEFAULT 0,
+    hinhanh VARCHAR(255),
+    trangthai VARCHAR(30) DEFAULT 'dangban'
+);
+
+-- 3. Bảng LUACHON_SANPHAM (Biến thể 150ml, 500ml, màu son)
+CREATE TABLE luachon_sanpham (
+    maluachon INT AUTO_INCREMENT PRIMARY KEY,
+    masanpham INT NOT NULL,
+    tenluachon VARCHAR(100) NOT NULL,
+    mausac VARCHAR(50),
+    dungtich VARCHAR(50),
+    giaban DECIMAL(12,2) NOT NULL DEFAULT 0,
+    soluongton INT NOT NULL DEFAULT 0
+);
+
+-- 4. Bảng DONHANG (Đơn hàng)
+CREATE TABLE donhang (
+    madonhang INT AUTO_INCREMENT PRIMARY KEY,
+    manguoidung INT NOT NULL,
+    tennguoinhan VARCHAR(150) NOT NULL,
+    sodienthoainhan VARCHAR(20) NOT NULL,
+    diachigiaohang VARCHAR(255) NOT NULL,
+    tongtien DECIMAL(12,2) NOT NULL DEFAULT 0,
+    trangthaidonhang VARCHAR(30) DEFAULT 'choxacnhan',
+    trangthaithanhtoan VARCHAR(30) DEFAULT 'chuathanhtoan',
+    ghichu TEXT NULL,
+    lydo_huy VARCHAR(500) DEFAULT NULL,
+    ngaydat DATETIME DEFAULT CURRENT_TIMESTAMP
+);
+
+-- 5. Bảng TONKHO (Quản lý tồn kho tổng & Cảnh báo)
+CREATE TABLE tonkho (
+    matonkho INT AUTO_INCREMENT PRIMARY KEY,
+    masanpham INT UNIQUE NOT NULL,
+    soluongton INT NOT NULL DEFAULT 0,
+    soluongtoithieu INT NOT NULL DEFAULT 5,
+    ghichu TEXT
+);
+```
+
+---
+
+<a id="3-chi-tiet-14-chuc-nang"></a>
+## 3. CHI TIẾT 14 CHỨC NĂNG NGHIỆP VỤ - CODE TRỰC TIẾP & GIẢI THÍCH TỪNG DÒNG
 
 ---
 
@@ -44,7 +112,7 @@ Hệ thống Website Bán Mỹ Phẩm được xây dựng theo **Mô hình 3 L�
 ### LUỒNG 1: ĐĂNG KÝ & ĐĂNG NHẬP TÀI KHOẢN (AUTH)
 
 #### A. Diễn giải Nghiệp vụ:
-Khách hàng nhập Email/SĐT và Mật khẩu. Backend truy vấn bảng `nguoidung`, kết hợp `LEFT JOIN vaitro` để lấy tên quyền (`khachhang` / `admin`). Đăng nhập thành công trả về đối tượng `user` an toàn và lưu vào `localStorage`.
+Người dùng nhập Email/SĐT và Mật khẩu. Backend truy vấn `nguoidung`, kết hợp `LEFT JOIN vaitro` lấy vai trò (`khachhang` / `admin`). Trả về JSON chứa thông tin user an toàn để ReactJS lưu vào `localStorage`.
 
 #### B. Sơ đồ luồng (Sequence Diagram):
 ```mermaid
@@ -58,8 +126,8 @@ sequenceDiagram
   User->>UI: Điền Email/Password & Bấm Đăng nhập
   UI->>API: POST /api/auth/login { email, matkhau }
   API->>DB: SELECT nd.*, vt.tenvaitro FROM nguoidung nd LEFT JOIN vaitro vt...
-  DB-->>API: Trả về dòng dữ liệu người dùng
-  API->>API: So sánh chuỗi mật khẩu
+  DB-->>API: Trả về dòng tài khoản
+  API->>API: Kiểm tra khớp mật khẩu
   API-->>UI: Trả về JSON { message, user }
   UI->>UI: localStorage.setItem("user", JSON.stringify(user))
 ```
@@ -111,24 +179,24 @@ async login(req, res) {
 ```
 
 #### D. Giải thích Chi tiết Từng Dòng Code:
-- **Dòng 2-3:** Lấy `taikhoan` và `matkhau` từ đối tượng `req.body`, gọi `.trim()` cắt bỏ khoảng trắng thừa.
-- **Dòng 5-7:** Nếu thiếu 1 trong 2 thông tin $ightarrow$ Trả về mã lỗi `HTTP 400 Bad Request`.
-- **Dòng 9-16:** Thực hiện SQL `SELECT` với `LEFT JOIN vaitro` để vừa lấy dữ liệu tài khoản vừa lấy vai trò. Mệnh đề `COALESCE(..., 'khachhang')` đảm bảo quyền mặc định nếu chưa gán role. Dùng tham số `?` để ngăn chặn SQL Injection.
-- **Dòng 18-20:** Nếu kết quả `rows` rỗng $ightarrow$ Trả về lỗi `HTTP 404` *"Tài khoản không tồn tại"*.
-- **Dòng 23-25:** Đối chiếu mật khẩu nhập vào với mật khẩu trong DB. Nếu khác $ightarrow$ Trả về lỗi `HTTP 401` *"Sai mật khẩu"*.
-- **Dòng 27-37:** Mật khẩu đúng $ightarrow$ Trả về JSON chứa đối tượng `user` an toàn để Frontend ReactJS cập nhật giao diện.
+- **Dòng 2-3:** Lấy `taikhoan` (email/SĐT) và `matkhau` từ đối tượng `req.body`, cắt khoảng trắng thừa bằng `.trim()`.
+- **Dòng 5-7:** Nếu để trống 1 trong 2 thông tin $ightarrow$ Trả về mã lỗi `HTTP 400 Bad Request`.
+- **Dòng 9-16:** Thực hiện câu lệnh SQL với `LEFT JOIN vaitro` để vừa lấy dữ liệu tài khoản vừa lấy tên vai trò. Dùng `COALESCE(..., 'khachhang')` phòng trường hợp chưa gán role. Dùng tham số `?` chống SQL Injection.
+- **Dòng 18-20:** Nếu mảng `rows` rỗng $ightarrow$ Trả về lỗi `HTTP 404` *"Tài khoản không tồn tại"*.
+- **Dòng 23-25:** Kiểm tra chuỗi mật khẩu. Nếu không khớp $ightarrow$ Trả về lỗi `HTTP 401` *"Sai mật khẩu"*.
+- **Dòng 27-37:** Khớp mật khẩu thành công $ightarrow$ Trả về JSON chứa đối tượng user an toàn để ReactJS lưu vào `localStorage`.
 
 ---
 
 <a id="luong-7"></a>
 ### LUỒNG 7: GIAO TÁC TRỪ KHO AN TOÀN - XỬ LÝ MUA ĐỒNG THỜI (RACE CONDITION LOCK FOR UPDATE)
 
-#### A. Diễn giải Nghiệp vụ (Trả lời thắc mắc trường hợp 2 người cùng bấm mua 1 sản phẩm chỉ còn 1 tồn kho):
-Khi **Khách hàng A** và **Khách hàng B** cùng bấm nút "Đặt hàng" tại cùng 1 giây cho sản phẩm còn **tồn kho = 1**:
-1. Động cơ CSDL khởi chạy **SQL Transaction (`conn.beginTransaction()`)**.
-2. Thực hiện câu lệnh truy vấn có mệnh đề **`FOR UPDATE`**. Mệnh đề này đặt một **Khóa dòng độc quyền (Exclusive Row Lock)** trên bản ghi sản phẩm/biến thể đó.
-3. Người gửi request nhanh hơn vài mili-giây (User A) sẽ giữ khóa trước. Tồn kho được kiểm tra là `1` $ightarrow$ Giảm tồn kho xuống `0` $ightarrow$ Đơn hàng của User A hoàn tất.
-4. Người gửi request sau (User B) bị tạm hoãn chờ cho đến khi User A kết thúc Transaction (`commit`). Khi khóa mở ra, User B mới được đọc dòng dữ liệu. Lúc này tồn kho đã là `0` ($0 < 1$) $ightarrow$ Hệ thống tung ngoại lệ: `"Sản phẩm X không đủ tồn kho"` và hủy bỏ (`rollback`) đơn hàng của User B.
+#### A. Diễn giải Nghiệp vụ (Trả lời trường hợp 2 người cùng mua 1 sản phẩm chỉ còn 1 tồn kho):
+Khi **Khách hàng A** và **Khách hàng B** cùng nhấn nút "Đặt hàng" tại cùng 1 giây cho sản phẩm còn **tồn kho = 1**:
+1. Động cơ CSDL mở một **SQL Transaction (`conn.beginTransaction()`)**.
+2. Thực hiện truy vấn có mệnh đề **`FOR UPDATE`** tạo một **Khóa dòng độc quyền (Exclusive Row Lock)** trên bản ghi sản phẩm/biến thể.
+3. Người gửi request nhanh hơn vài mili-giây (User A) giữ khóa trước $ightarrow$ Trừ tồn kho từ `1` xuống `0` $ightarrow$ Đơn hàng User A hoàn tất.
+4. Người gửi request sau (User B) bị tạm hoãn chờ. Khi khóa mở ra, User B mới được đọc dòng dữ liệu. Lúc này tồn kho đã là `0` ($0 < 1$) $ightarrow$ Hệ thống tung ngoại lệ: `"Sản phẩm X không đủ tồn kho"` và hủy bỏ (`rollback`) đơn hàng của User B.
 
 #### B. Sơ đồ luồng (Sequence Diagram):
 ```mermaid
@@ -203,10 +271,10 @@ await conn.commit();
 ---
 
 <a id="luong-8"></a>
-### LUỒNG 8: GỬI EMAIL XÁC NHẬN ĐƠN HÀNG TỰ ĐỘNG (EMAIL SYSTEM)
+### LUỒNG 8: TỰ ĐỘNG GỬI EMAIL XÁC NHẬN ĐƠN HÀNG (EMAIL SYSTEM)
 
 #### A. Diễn giải Nghiệp vụ:
-Sau khi đơn hàng được khởi tạo thành công trong CSDL, hệ thống gọi hàm `sendOrderConfirmationEmail`. Hàm này tạo bảng HTML liệt kê danh sách mỹ phẩm đã đặt, tổng tiền, thông tin giao hàng, đồng thời ghi lại 1 file HTML local trong thư mục `sent_emails/email_{madonhang}.html` và gửi thư đến email của khách hàng.
+Sau khi đơn hàng khởi tạo thành công trong CSDL, hệ thống gọi `sendOrderConfirmationEmail`. Hàm này tạo bảng HTML liệt kê danh sách mỹ phẩm đã đặt, tổng tiền, thông tin giao hàng, tự động lưu 1 file HTML local tại `sent_emails/email_{madonhang}.html` và gửi thư đến email của khách hàng.
 
 #### B. Mã lệnh Code Backend Trực tiếp (`server/utils/email.js`):
 ```javascript
@@ -268,8 +336,8 @@ module.exports = { sendOrderConfirmationEmail };
 ```
 
 #### C. Giải thích Chi tiết Từng Dòng Code:
-- **Dòng 7-27:** Duyệt mảng `items`, lấy tên sản phẩm, biến thể (150ml/500ml/màu son), số lượng, đơn giá và định dạng giá tiền dạng Việt Nam Đồng `toLocaleString("vi-VN")`.
-- **Dòng 29-45:** Thiết kế khung HTML màu sắc hồng thẩm mỹ, tạo bảng hiển thị danh sách sản phẩm và tổng giá trị thanh toán.
+- **Dòng 7-27:** Duyệt mảng `items`, lấy tên sản phẩm, biến thể (150ml/500ml/màu son), số lượng, đơn giá và định dạng giá tiền `toLocaleString("vi-VN")`.
+- **Dòng 29-45:** Thiết kế khung HTML màu sắc hồng thẩm mỹ, tạo bảng hiển thị danh sách sản phẩm và tổng tiền.
 - **Dòng 48-53:** Tự động tạo thư mục `sent_emails/` và ghi file HTML theo tên `email_{madonhang}.html`. Giúp sinh viên minh chứng cho Giảng viên/Hội đồng bằng chứng hệ thống đã phát hành email xác nhận chuẩn xác.
 
 ---
@@ -389,8 +457,8 @@ cron.schedule("*/10 * * * *", async () => {
 
 ---
 
-<a id="3-qa"></a>
-## 3. BỘ CÂU HỎI Q&A TRẢ LỜI HỘI ĐỒNG BẢO VỆ KHÓA LUẬN
+<a id="4-qa"></a>
+## 4. BỘ CÂU HỎI Q&A TRẢ LỜI HỘI ĐỒNG BẢO VỆ KHÓA LUẬN
 
 ### Câu 1: Em giải quyết bài toán 2 người cùng bấm mua 1 món mỹ phẩm còn tồn kho = 1 như thế nào?
 - **Trả lời:** Em sử dụng **SQL Transaction** kết hợp câu lệnh **`SELECT ... FOR UPDATE`** trong InnoDB Engine. Khi người đầu tiên bấm đặt hàng, CSDL đặt **Khóa dòng độc quyền (Exclusive Row Lock)** trên sản phẩm đó. Người thứ 2 bị tạm hoãn chờ. Sau khi người thứ nhất hoàn tất trừ kho về 0, khóa giải phóng, hệ thống đọc lại tồn kho mới ($0 < 1$) $ightarrow$ Hủy đơn người thứ 2 và thông báo *"Sản phẩm đã hết hàng"*.
