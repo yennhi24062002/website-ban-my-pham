@@ -318,7 +318,11 @@ const OrderController = {
       await conn.commit();
 
       // Gửi email xác nhận đặt hàng thực tế/offline trong nền
-      const targetMail = userEmail || req.body.email || process.env.EMAIL_USER;
+      let targetMail = req.body.email || userEmail || process.env.EMAIL_USER;
+      if (!targetMail || targetMail.includes("hongxinh.com")) {
+        targetMail = (req.body.email && !req.body.email.includes("hongxinh.com")) ? req.body.email : process.env.EMAIL_USER;
+      }
+
       if (targetMail) {
         try {
           const { sendOrderConfirmationEmail } = require("../utils/email");
@@ -330,7 +334,14 @@ const OrderController = {
             tongtien: tongtienSauGiam,
             ngaydat: new Date()
           };
+          // Gửi mail xác nhận cho người mua
           sendOrderConfirmationEmail(orderObj, items, targetMail).catch(e => console.error("[OrderEmail Error]", e.message));
+
+          // Đồng thời gửi 1 bản sao thông báo đơn hàng mới về EMAIL_USER (nếu khác email người mua)
+          const adminMail = process.env.EMAIL_USER;
+          if (adminMail && adminMail !== targetMail) {
+            sendOrderConfirmationEmail(orderObj, items, adminMail).catch(e => console.error("[AdminEmail Error]", e.message));
+          }
         } catch (e) {
           console.error("[OrderEmail Error]", e.message);
         }
