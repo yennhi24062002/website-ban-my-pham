@@ -1,2 +1,2 @@
-const API_BASE = process.env.REACT_APP_API_BASE_URL || "https://3bbecfac95c54b62-42-116-13-128.serveousercontent.com/api";
+const API_BASE = process.env.REACT_APP_API_BASE_URL || "https://ad25aa85aa8b13.lhr.life/api";
 export default API_BASE;
