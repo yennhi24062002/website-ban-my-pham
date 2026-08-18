@@ -265,7 +265,7 @@ const OrderController = {
         }
       }
 
-      // Kiểm tra và áp dụng voucher theo ma_serial (mã serial riêng của từng lượt cấp)
+      // Kiểm tra và áp dụng voucher theo ma_serial hoặc macode
       let giamgia = 0;
       let matched_voucher_nd = null;
       if (ma_serial) {
@@ -273,9 +273,9 @@ const OrderController = {
           `SELECT v.*, vn.mavoucher_nd, vn.sudung
            FROM voucher_nguoidung vn
            JOIN voucher v ON v.mavoucher = vn.mavoucher
-           WHERE vn.ma_serial = ? AND vn.manguoidung = ? AND vn.sudung = 0
+           WHERE (vn.ma_serial = ? OR v.macode = ?) AND vn.manguoidung = ? AND vn.sudung = 0
              AND v.trangthai = 'hoatdong' AND v.ngayhethan >= NOW()`,
-          [ma_serial, manguoidung]
+          [ma_serial, ma_serial, manguoidung]
         );
         if (vRows.length) {
           const voucher = vRows[0];

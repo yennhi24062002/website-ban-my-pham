@@ -1,6 +1,6 @@
-export const danhMuc = ["Tất cả", "Chăm sóc da", "Trang điểm", "Làm sạch", "Chống nắng"];
+export const danhMuc = ["Tất cả", "Chăm sóc da", "Trang điểm", "Làm sạch", "Chống nắng", "Son"];
 
-// Ánh xạ hình ảnh riêng cho từng sản phẩm — khớp 100% với TiDB Cloud
+// Ánh xạ hình ảnh riêng cho từng sản phẩm — khớp 100% với TiDB Cloud & MySQL local
 export const HINH_SANPHAM = {
   1:  "/hinhanh/cocoon_cleansing_water.png",
   2:  "/hinhanh/klairs_toner.png",
@@ -16,10 +16,11 @@ export const HINH_SANPHAM = {
   12: "/hinhanh/cocoon_coffee_scrub.png",
   13: "/hinhanh/kemduong.png",
   14: "/hinhanh/suaruamat.png",
+  15: "/hinhanh/son.png",
+  16: "/hinhanh/son_3ce_lipstick.png"
 };
 
-// DỮ LIỆU MẪU FALLBACK — bám sát 100% theo website_ban_my_pham.sql
-// masanpham, maluachon phải khớp chính xác với CSDL TiDB Cloud
+// DỮ LIỆU MẪU FALLBACK — bám sát 100% theo website_ban_my_pham.sql & TiDB Cloud
 export const sanPhams = [
   {
     masanpham: 1,
@@ -272,5 +273,41 @@ export const sanPhams = [
     tileban: 90,
     khuyenmai: "Chăm sóc làn da nhạy cảm đạt chuẩn y khoa",
     luachon: []
+  },
+  {
+    masanpham: 15,
+    ten: "Son Lì MAC Ruby Woo",
+    danhMuc: "Trang điểm",
+    gia: 580000,
+    giagoc: null,
+    ton: 20,
+    hinh: "/hinhanh/son.png",
+    moTa: "Son lì MAC Ruby Woo là dòng son huyền thoại được ưa chuộng với màu đỏ cherry đậm kinh định. Chất son mịn, bám màu cả ngày, tôn da.",
+    thongso: "Thương hiệu: MAC Cosmetics\nXuất xứ: Canada\nDung tích: 3g\nLoại: Son lì",
+    thanhphan: "Thành phần chính:\n• Silica: Tạo kết cấu lì mịn lâu trôi.\n• Beeswax (Sáp ong): Giữ ẩm môi tự nhiên.",
+    hdsd: "Thoa son từ tâm môi ra ngoài, lớp đầu nhẹ rồi tiếp theo đè lớp thứ hai để màu đậm hơn.",
+    tileban: 72,
+    khuyenmai: "Mua 1 tặng 1 túi vải MAC chính hãng",
+    luachon: [
+      { maluachon: 16, mausac: "Ruby Woo", loai: "Son lì", dungtich: "3g", giaban: 580000, soluongton: 20, hinh: "/hinhanh/son.png" }
+    ]
+  },
+  {
+    masanpham: 16,
+    ten: "Son Kem 3CE Soft Lip Color",
+    danhMuc: "Trang điểm",
+    gia: 320000,
+    giagoc: null,
+    ton: 30,
+    hinh: "/hinhanh/son_3ce_lipstick.png",
+    moTa: "Son kem lì 3CE Soft Lip Color mang đến bộ sưu tập màu sắc đa dạng theo xu hướng Hàn Quốc, kết cấu kem nhẹ bám màu lên đến 8 tiếng, không khô môi.",
+    thongso: "Thương hiệu: 3CE (3 Concept Eyes)\nXuất xứ: Hàn Quốc\nDung tích: 4g\nLoại: Son kem lì",
+    thanhphan: "Thành phần chính:\n• Hyaluronic Acid: Dưỡng ẩm môi sâu.\n• Dimethicone: Giữ màu bền lâu.",
+    hdsd: "Lăn đều đầu cọ từ trung tâm ra ngoài. Nhấn nhẹ môi để màu bão hòa.",
+    tileban: 88,
+    khuyenmai: "Mua 2 cây son 3CE giảm thêm 50K",
+    luachon: [
+      { maluachon: 17, mausac: "Nhiều màu", loai: "Son kem", dungtich: "4g", giaban: 320000, soluongton: 30, hinh: "/hinhanh/son_3ce_lipstick.png" }
+    ]
   }
 ];
