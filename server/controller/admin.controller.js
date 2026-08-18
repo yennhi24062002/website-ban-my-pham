@@ -164,50 +164,74 @@ const AdminController = {
       return res.status(400).json({ message: "Số lượng nhập phải là số dương." });
     }
     try {
-      if (String(maluachon).startsWith("sp-")) {
-        // Sản phẩm mặc định (không có biến thể) → cập nhật bảng tonkho
-        const masanpham = Number(maluachon.replace("sp-", ""));
-        await db.query(
-          `INSERT INTO tonkho (masanpham, soluongton, soluongtoithieu)
-           VALUES (?, ?, 5)
-           ON DUPLICATE KEY UPDATE soluongton = soluongton + ?`,
-          [masanpham, Number(soLuongNhap), Number(soLuongNhap)]
-        );
-        const [[row]] = await db.query(
-          `SELECT soluongton FROM tonkho WHERE masanpham = ?`,
-          [masanpham]
-        );
-        return res.json({ message: "Nhập hàng thành công!", soluongtonMoi: row ? row.soluongton : Number(soLuongNhap) });
-      } else {
-        // Sản phẩm có biến thể → cập nhật bảng luachon_sanpham
-        await db.query(
-          `UPDATE luachon_sanpham SET soluongton = soluongton + ? WHERE maluachon = ?`,
-          [Number(soLuongNhap), Number(maluachon)]
-        );
-        // Lấy masanpham để cập nhật bảng tonkho tổng
+      const cleanStr = String(maluachon);
+      const isSp = cleanStr.startsWith("sp-");
+      const targetId = Number(cleanStr.replace("sp-", ""));
+      const numNhap = Number(soLuongNhap);
+
+      let isVariantUpdated = false;
+      let newStock = 0;
+
+      // 1. Nếu không có tiền tố sp-, thử kiểm tra luachon_sanpham trước
+      if (!isSp) {
         const [[variantRow]] = await db.query(
-          `SELECT masanpham FROM luachon_sanpham WHERE maluachon = ?`,
-          [Number(maluachon)]
+          `SELECT * FROM luachon_sanpham WHERE maluachon = ?`,
+          [targetId]
         );
+
         if (variantRow) {
+          await db.query(
+            `UPDATE luachon_sanpham SET soluongton = soluongton + ? WHERE maluachon = ?`,
+            [numNhap, targetId]
+          );
           await db.query(
             `INSERT INTO tonkho (masanpham, soluongton, soluongtoithieu)
              VALUES (?, ?, 5)
              ON DUPLICATE KEY UPDATE soluongton = soluongton + ?`,
-            [variantRow.masanpham, Number(soLuongNhap), Number(soLuongNhap)]
+            [variantRow.masanpham, numNhap, numNhap]
           );
+          try {
+            await db.query(
+              `UPDATE sanpham SET soluongton = soluongton + ? WHERE masanpham = ?`,
+              [numNhap, variantRow.masanpham]
+            );
+          } catch (e) {}
+          const [[updatedVariant]] = await db.query(
+            `SELECT soluongton FROM luachon_sanpham WHERE maluachon = ?`,
+            [targetId]
+          );
+          isVariantUpdated = true;
+          newStock = updatedVariant ? updatedVariant.soluongton : numNhap;
         }
-        const [[row]] = await db.query(
-          `SELECT soluongton FROM luachon_sanpham WHERE maluachon = ?`,
-          [Number(maluachon)]
-        );
-        if (!row) return res.status(404).json({ message: "Không tìm thấy biến thể này." });
-        return res.json({ message: "Nhập hàng thành công!", soluongtonMoi: row.soluongton });
       }
+
+      // 2. Nếu là sp-X hoặc sản phẩm trực tiếp trong bảng tonkho/sanpham
+      if (!isVariantUpdated) {
+        await db.query(
+          `INSERT INTO tonkho (masanpham, soluongton, soluongtoithieu)
+           VALUES (?, ?, 5)
+           ON DUPLICATE KEY UPDATE soluongton = soluongton + ?`,
+          [targetId, numNhap, numNhap]
+        );
+        try {
+          await db.query(
+            `UPDATE sanpham SET soluongton = soluongton + ? WHERE masanpham = ?`,
+            [targetId, numNhap]
+          );
+        } catch (e) {}
+        const [[row]] = await db.query(
+          `SELECT soluongton FROM tonkho WHERE masanpham = ?`,
+          [targetId]
+        );
+        newStock = row ? row.soluongton : numNhap;
+      }
+
+      return res.json({ message: "Nhập hàng thành công!", soluongtonMoi: newStock });
     } catch (error) {
       res.status(500).json({ message: "Lỗi nhập hàng.", error: error.message });
     }
   }
+
 };
 
 

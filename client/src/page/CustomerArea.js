@@ -472,17 +472,19 @@ function CustomerArea({
               <option value="">--- Không áp dụng voucher ---</option>
               {danhSachVoucher.filter(v => !v.sudung).map(v => {
                 const hopLe = Number(v.giatri) <= tongTien * 0.5;
+                const codeDuyNhat = v.ma_serial || v.macode || (`VC-${v.mavoucher_nd}`);
                 return (
                   <option
                     key={v.mavoucher_nd}
-                    value={v.ma_serial}
+                    value={codeDuyNhat}
                     disabled={!hopLe}
                   >
-                    [{v.ma_serial}] {v.ten} — Giảm {formatTien(v.giatri)}{!hopLe ? ` (Yêu cầu đơn tối thiểu từ ${formatTien(Number(v.giatri) * 2)})` : " ✓"}
+                    [{codeDuyNhat}] {v.ten} — Giảm {formatTien(v.giatri)}{!hopLe ? ` (Yêu cầu đơn tối thiểu từ ${formatTien(Number(v.giatri) * 2)})` : " ✓"}
                   </option>
                 );
               })}
             </select>
+
             {voucherChon && (
               <div style={{
                 marginTop: 8, padding: "8px 12px", background: "#e8f5e9",
