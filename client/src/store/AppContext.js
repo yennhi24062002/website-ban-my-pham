@@ -277,6 +277,7 @@ export function AppProvider({ children }) {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           manguoidung: nguoiDung.manguoidung,
+          email: nguoiDung?.email || form?.email || null,
           tennguoinhan: form.tennguoinhan.trim(),
           sodienthoainhan: form.sodienthoainhan.trim(),
           diachigiaohang: form.diachigiaohang.trim(),

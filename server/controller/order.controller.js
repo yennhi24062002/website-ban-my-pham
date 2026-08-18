@@ -196,7 +196,9 @@ const OrderController = {
             throw new Error(`Lua chon ${luachon.tensanpham} khong du ton kho.`);
           }
 
-          const donGia = Number(luachon.giaban);
+          // Sử dụng đơn giá thực tế từ giỏ hàng (đã trừ % khuyến mãi nếu có)
+          const giabanGoc = Number(luachon.giaban);
+          const donGia = (item.dongia && Number(item.dongia) > 0) ? Number(item.dongia) : giabanGoc;
           const thanhTien = donGia * soLuong;
           tongtien += thanhTien;
 
@@ -243,7 +245,8 @@ const OrderController = {
             throw new Error(`San pham ${sanPham.tensanpham} khong du ton kho.`);
           }
 
-          const donGia = Number(sanPham.giaban);
+          const giabanGoc = Number(sanPham.giaban);
+          const donGia = (item.dongia && Number(item.dongia) > 0) ? Number(item.dongia) : giabanGoc;
           const thanhTien = donGia * soLuong;
           tongtien += thanhTien;
 

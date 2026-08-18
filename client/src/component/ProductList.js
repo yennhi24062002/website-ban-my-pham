@@ -51,14 +51,7 @@ function ProductList({ sanPhams, setChiTiet }) {
                   <span className="chu-tien-trinh">Đã bán {sp.tileban || 30}%</span>
                 </div>
 
-                {/* Dòng khuyến mại/Promo - chỉ hiện khi thực sự đang trong đợt giảm giá active */}
-                {coGiamGia && sp.tenkm ? (
-                  <div className="tag-khuyen-mai" style={{ color: "#d81b60", textAlign: "center", fontWeight: 600 }}>
-                    {sp.tenkm}
-                  </div>
-                ) : (
-                  <div className="tag-khuyen-mai rong"></div>
-                )}
+
 
                 {/* Nút thêm giỏ hàng nhanh */}
                 <button 
