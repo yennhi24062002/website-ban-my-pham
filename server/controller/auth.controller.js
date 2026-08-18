@@ -22,13 +22,14 @@ const AuthController = {
 
 
       const [rows] = await db.query(
-        `SELECT nd.*, vt.tenvaitro
+        `SELECT nd.*, COALESCE(vt.tenvaitro, 'khachhang') as tenvaitro
          FROM nguoidung nd
-         JOIN vaitro vt ON vt.mavaitro = nd.mavaitro
+         LEFT JOIN vaitro vt ON vt.mavaitro = nd.mavaitro
          WHERE nd.email = ? OR nd.sodienthoai = ?
          LIMIT 1`,
-        [taikhoan.trim(), taikhoan.trim()]
+        [taikhoan, taikhoan]
       );
+
 
       if (!rows.length) {
         return res.status(404).json({ message: "Tai khoan khong ton tai." });
