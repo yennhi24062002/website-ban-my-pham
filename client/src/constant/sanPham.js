@@ -6,7 +6,7 @@ export const sanPhams = [
     ten: "Nước Hoa Hồng Klairs Không Mùi",
     danhMuc: "Làm sạch",
     gia: 207000,
-    giagoc: 435000,
+    giagoc: null,
     ton: 45,
     hinh: "/hinhanh/nuochoahong.png",
     moTa: `Nước hoa hồng Klairs Supple Preparation Unscented Toner là phiên bản không mùi được thiết kế đặc biệt dành cho làn da nhạy cảm, dễ kích ứng với các thành phần tạo hương liệu.
@@ -63,7 +63,7 @@ Lưu ý quan trọng:
     ten: "Nước Tẩy Trang L'Oreal Tươi Mát",
     danhMuc: "Làm sạch",
     gia: 140000,
-    giagoc: 249000,
+    giagoc: null,
     ton: 60,
     hinh: "/hinhanh/suaruamat.png",
     moTa: `Nước tẩy trang L'Oreal Paris 3-in-1 Micellar Water Refreshing là giải pháp làm sạch toàn diện 3 tác động trong 1 bước duy nhất: tẩy trang – làm sạch – tươi mát. Được xây dựng đặc biệt cho da dầu và da hỗn hợp hay bóng nhờn.
@@ -117,7 +117,7 @@ Mẹo sử dụng hiệu quả:
     ten: "Kem Chống Nắng Skin1004 Rau Má",
     danhMuc: "Chống nắng",
     gia: 252000,
-    giagoc: 495000,
+    giagoc: null,
     ton: 25,
     hinh: "/hinhanh/kemchongnang.png",
     moTa: `Kem chống nắng vật lý Skin1004 Madagascar Centella Air-Fit Suncream Plus SPF50+ PA++++ là một trong những sản phẩm chống nắng được yêu thích nhất tại Hàn Quốc nhờ công thức vật lý an toàn tuyệt đối kết hợp với chiết xuất rau má Madagascar nồng độ cao.
@@ -172,7 +172,7 @@ Lưu ý: Kem chống nắng vật lý có thể gây hiệu ứng "trắng nhẹ
     ten: "Kem Chống Nắng La Roche-Posay",
     danhMuc: "Chống nắng",
     gia: 389000,
-    giagoc: 590000,
+    giagoc: null,
     ton: 15,
     hinh: "/hinhanh/kemnangtong.png",
     moTa: `Kem chống nắng La Roche-Posay Anthelios UVMune 400 SPF50+ là tiêu chuẩn vàng trong lĩnh vực chống nắng cao cấp từ thương hiệu dược mỹ phẩm nổi tiếng của Pháp. Sản phẩm sử dụng công nghệ UVMune 400 độc quyền – lần đầu tiên bảo vệ da khỏi tia UVA bước sóng siêu dài (400nm), loại tia nguy hiểm nhất nhưng ít sản phẩm nào ngăn chặn được.
@@ -217,7 +217,7 @@ Tẩy sạch đúng cách: Sản phẩm có khả năng bám dính tốt, nên s
     ten: "Sữa Chống Nắng Anessa Kiềm Dầu",
     danhMuc: "Chống nắng",
     gia: 428000,
-    giagoc: 702000,
+    giagoc: null,
     ton: 28,
     hinh: "/hinhanh/anessa_sunscreen.png",
     moTa: `Sữa chống nắng dưỡng da kiềm dầu Anessa Perfect UV Sunscreen Skincare Milk N SPF50+ PA++++ là biểu tượng của ngành chống nắng Nhật Bản trong hơn 25 năm qua. Được mệnh danh là "vua chống nắng Nhật", sản phẩm liên tục dẫn đầu bảng xếp hạng bán chạy tại Nhật Bản, Hàn Quốc và toàn khu vực châu Á.
@@ -268,7 +268,7 @@ Có thể sử dụng cho cả thân người: Sản phẩm phù hợp thoa lên
     ten: "Nước Tẩy Trang Bioderma Hồng",
     danhMuc: "Làm sạch",
     gia: 361000,
-    giagoc: 580000,
+    giagoc: null,
     ton: 55,
     hinh: "/hinhanh/bioderma_micellar.png",
     moTa: `Nước tẩy trang Bioderma Sensibio H2O Micellar Water là sản phẩm biểu tượng của thương hiệu Bioderma từ Pháp – được mệnh danh là "nước tẩy trang số 1 thế giới" với hơn 1 tỷ đơn vị bán ra mỗi năm.
@@ -320,7 +320,7 @@ Kết thúc: Có thể không cần rửa lại với nước. Tuy nhiên, nếu
     ten: "Serum Dưỡng Ẩm Hồng Xinh",
     danhMuc: "Chăm sóc da",
     gia: 320000,
-    giagoc: 400000,
+    giagoc: null,
     ton: 22,
     hinh: "/hinhanh/serum.png",
     moTa: `Serum dưỡng ẩm Hồng Xinh Hydra Glow Essence là sản phẩm dưỡng da chủ lực được nghiên cứu và phát triển bởi đội ngũ chuyên gia da liễu người Việt, hiểu rõ đặc thù làn da châu Á trong điều kiện khí hậu nhiệt đới ẩm.
@@ -377,7 +377,7 @@ Lịch sử dụng đề xuất:
     ten: "Son Lì MAC Ruby Woo",
     danhMuc: "Son",
     gia: 580000,
-    giagoc: 750000,
+    giagoc: null,
     ton: 45,
     hinh: "/hinhanh/son.png",
     moTa: `Son lì MAC Ruby Woo là dòng son huyền thoại được mệnh danh là "son đỏ chuẩn mực" toàn cầu. Màu đỏ thuần kinh điển cùng công thức lì mịn không trôi suốt 8 tiếng, hoàn hảo cho mọi tone da từ trắng đến ngăm.`,
@@ -396,7 +396,7 @@ Lịch sử dụng đề xuất:
     ten: "Son Kem 3CE Soft Lip Color",
     danhMuc: "Son",
     gia: 320000,
-    giagoc: 420000,
+    giagoc: null,
     ton: 75,
     hinh: "/hinhanh/son_3ce_lipstick.png",
     moTa: `Son kem lì 3CE Soft Lip Color mang đến bộ sưu tập màu sắc phong phú từ nude, hồng đào, đỏ berry đến nâu đất. Kết cấu kem mỏng nhẹ, thoa lên môi tựa như lớp màu mướt mịn, không gây khô căng suốt cả ngày.`,

@@ -10,7 +10,14 @@ async function capNhatTonKhoTheoSanPham(conn, masanpham, soLuongGiam) {
     "UPDATE tonkho SET soluongton = GREATEST(soluongton - ?, 0) WHERE masanpham = ?",
     [soLuongGiam, masanpham]
   );
+  try {
+    await conn.query(
+      "UPDATE sanpham SET soluongton = GREATEST(soluongton - ?, 0) WHERE masanpham = ?",
+      [soLuongGiam, masanpham]
+    );
+  } catch (e) {}
 }
+
 
 async function coBangLuachon(conn) {
   const [rows] = await conn.query("SHOW TABLES LIKE 'luachon_sanpham'");
