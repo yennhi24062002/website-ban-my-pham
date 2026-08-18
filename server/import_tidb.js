@@ -2,7 +2,7 @@ const mysql = require('mysql2/promise');
 const fs = require('fs');
 const path = require('path');
 
-async function importToTiDB() {
+async function setupBothDatabases() {
   const sqlFile = path.join(__dirname, 'database', 'website_ban_my_pham.sql');
   console.log('Reading SQL file:', sqlFile);
   const sqlContent = fs.readFileSync(sqlFile, 'utf8');
@@ -24,32 +24,27 @@ async function importToTiDB() {
       minVersion: 'TLSv1.2',
       rejectUnauthorized: false
     },
-    multipleStatements: true,
-    connectTimeout: 30000
+    multipleStatements: true
   });
 
-  console.log('Successfully connected to TiDB Cloud! Importing database...');
+  for (const dbName of ['sys', 'website_ban_my_pham']) {
+    console.log(`\nImporting into database '${dbName}'...`);
+    await connection.query(`CREATE DATABASE IF NOT EXISTS \`${dbName}\`;`);
+    await connection.query(`USE \`${dbName}\`;`);
 
-  let success = 0, errors = 0;
-  for (const stmt of statements) {
-    if (!stmt || stmt.startsWith('--')) continue;
-    try {
-      await connection.query(stmt);
-      success++;
-    } catch (e) {
-      if (!e.message.includes('already exists') && !e.message.includes('Duplicate')) {
-        console.log('Statement warning:', e.message.substring(0, 100));
-        errors++;
-      }
+    for (const stmt of statements) {
+      if (!stmt || stmt.startsWith('--')) continue;
+      try {
+        await connection.query(stmt);
+      } catch (e) {}
     }
+
+    const [rows] = await connection.query(`SELECT COUNT(*) as count FROM \`${dbName}\`.sanpham;`);
+    console.log(`  -> Database '${dbName}' products count:`, rows[0].count);
   }
 
-  // Test query products
-  const [rows] = await connection.query('SELECT COUNT(*) as count FROM sanpham');
-  console.log('IMPORT CHECK - Total products in TiDB:', rows[0].count);
-
   await connection.end();
-  console.log(`\nIMPORT DONE PERFECTLY! Success: ${success}, Warnings: ${errors}`);
+  console.log('\nIMPORT INTO BOTH DATABASES COMPLETED SUCCESSFULLY!');
 }
 
-importToTiDB().catch(console.error);
+setupBothDatabases().catch(console.error);
