@@ -12,9 +12,18 @@ export function useApp() {
 
 // Hàm gộp lựa chọn từ API với dữ liệu mẫu local (fallback)
 function hopNhatLuachon(apiSanPham) {
+  if (!apiSanPham) return apiSanPham;
   const sanPhamMau = sanPhamMacDinh.find((item) => item.masanpham === apiSanPham.masanpham);
-  if (apiSanPham.luachon && apiSanPham.luachon.length > 0) return apiSanPham;
-  if (sanPhamMau) return { ...apiSanPham, luachon: sanPhamMau.luachon };
+  if (apiSanPham.luachon && apiSanPham.luachon.length > 0) {
+    return apiSanPham;
+  }
+  if (sanPhamMau && sanPhamMau.luachon && sanPhamMau.luachon.length > 0) {
+    const luachonCapNhat = sanPhamMau.luachon.map(lc => ({
+      ...lc,
+      soluongton: Number(apiSanPham.ton ?? lc.soluongton ?? 0)
+    }));
+    return { ...apiSanPham, luachon: luachonCapNhat };
+  }
   return apiSanPham;
 }
 

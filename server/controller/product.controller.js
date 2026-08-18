@@ -105,15 +105,12 @@ async function layDanhSachSanPham() {
 
   let variantRows = [];
   try {
-    const [checkRows] = await db.query("SHOW TABLES LIKE 'luachon_sanpham'");
-    if (checkRows.length) {
-      [variantRows] = await db.query(
-        `SELECT *
-         FROM luachon_sanpham
-         ORDER BY masanpham, maluachon`
-      );
-    }
+    const [rows] = await db.query(
+      `SELECT * FROM luachon_sanpham ORDER BY masanpham, maluachon`
+    );
+    variantRows = rows;
   } catch (error) {
+    console.error("[ProductController] Error loading luachon_sanpham:", error.message);
     variantRows = [];
   }
 
