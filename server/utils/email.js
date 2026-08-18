@@ -3,9 +3,10 @@ const fs = require("fs");
 const path = require("path");
 
 async function sendOrderConfirmationEmail(order, items, userEmail) {
-  const EMAIL_USER = process.env.EMAIL_USER;       // Email gửi (ví dụ: phamyennhi2462002@gmail.com)
-  const BREVO_API_KEY = process.env.BREVO_API_KEY; // API key từ brevo.com
-  const EMAIL_PASS = process.env.EMAIL_PASS;       // Gmail App Password
+  // Đọc biến từ process.env, nếu chưa có trên Render thì tự dùng fallback tài khoản mặc định
+  const EMAIL_USER = process.env.EMAIL_USER || "phamyennhi2462002@gmail.com";
+  const BREVO_API_KEY = process.env.BREVO_API_KEY || "";
+  const EMAIL_PASS = process.env.EMAIL_PASS || "lilbbuxhaoswthgu";
   // Tạo danh sách sản phẩm hiển thị trong email
   const itemsHtml = items.map(item => {
     const options = [item.mausac, item.loai, item.dungtich].filter(Boolean).join(" - ");
