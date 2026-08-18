@@ -1,5 +1,2 @@
-// Cấu hình địa chỉ gốc của API backend
-// Dùng biến môi trường nếu có, mặc định là localhost khi phát triển
-const API_BASE = process.env.REACT_APP_API_BASE_URL || "http://localhost:8000/api";
-
+const API_BASE = "https://d0153a175775671f-42-116-13-128.serveousercontent.com/api";
 export default API_BASE;

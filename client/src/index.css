@@ -396,11 +396,20 @@ td {
   background: #ffffff;
 }
 
+/* ===== MAIN CONTAINER ===== */
+.khung {
+  width: min(92%, 1200px);
+  margin: 30px auto 50px;
+}
+
 /* ===== GRID SYSTEM ===== */
 .hai-cot {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 25px;
+  align-items: start;
+  max-width: 1250px;
+  margin: 0 auto;
 }
 
 .rong {
