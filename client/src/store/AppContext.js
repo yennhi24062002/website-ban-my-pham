@@ -43,8 +43,8 @@ function chuyenSanPhamTuApi(sp) {
     thanhphan: sp.thanhphan || "",
     hdsd: sp.hdsd || "",
     tileban: sp.tileban ?? 30,
-    khuyenmai: sp.khuyenmai || "",
-    tenkm: sp.tenkm || "",
+    khuyenmai: sp.khuyenmai || sp.tenkhuyenmai || "",
+    tenkm: sp.tenkm || sp.khuyenmai || (sp.tenkhuyenmai ? `${sp.tenkhuyenmai} (-${sp.phantramgiam}%)` : ""),
     luachon: (sp.luachon || sp.bienthe || []).map((item) => ({
       maluachon: item.maluachon || item.mabienthe,
       mausac: item.mausac || "Mặc định",

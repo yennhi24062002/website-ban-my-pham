@@ -30,6 +30,7 @@ function nhanDangSanPham(row, luachon = []) {
     hdsd: row.hdsd || "",
     tileban: row.tileban || 30,
     khuyenmai: row.khuyenmai || "",
+    tenkm: row.tenkhuyenmai ? `${row.tenkhuyenmai} (-${row.phantramgiam}%)` : (row.khuyenmai || ""),
     trangthai: row.trangthai,
     ngaytao: row.ngaytao,
     tendanhmuc: row.tendanhmuc,
@@ -70,8 +71,8 @@ async function layDanhSachSanPham() {
        LEFT JOIN tonkho tk ON tk.masanpham = p.masanpham
        LEFT JOIN sanpham_khuyenmai ks ON p.masanpham = ks.masanpham
        LEFT JOIN khuyenmai k ON ks.makhuyenmai = k.makhuyenmai
-         AND k.trangthai = 'hoatdong'
-         AND NOW() BETWEEN k.ngaybatdau AND k.ngayketthuc
+         AND (k.trangthai = 'hoatdong' OR k.trangthai IS NULL)
+         AND (k.ngayketthuc IS NULL OR k.ngayketthuc >= NOW())
        ORDER BY p.masanpham ASC`
     );
   } catch (e1) {

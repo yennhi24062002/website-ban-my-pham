@@ -36,7 +36,7 @@ const KhuyenMaiController = {
       const { tenkhuyenmai, phantramgiam, ngaybatdau, ngayketthuc, sanphamIds } = req.body;
 
       const [result] = await db.query(
-        "INSERT INTO khuyenmai (tenkhuyenmai, phantramgiam, ngaybatdau, ngayketthuc) VALUES (?, ?, ?, ?)",
+        "INSERT INTO khuyenmai (tenkhuyenmai, phantramgiam, ngaybatdau, ngayketthuc, trangthai) VALUES (?, ?, COALESCE(?, NOW()), COALESCE(?, DATE_ADD(NOW(), INTERVAL 30 DAY)), 'hoatdong')",
         [tenkhuyenmai, phantramgiam || 0, ngaybatdau || null, ngayketthuc || null]
       );
 
