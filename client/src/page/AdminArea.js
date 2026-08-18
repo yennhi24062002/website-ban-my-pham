@@ -42,8 +42,12 @@ function AdminArea({ danhMuc, sanPhams, currentTab, setCurrentTab }) {
     }
   };
 
-  // States: Sản phẩm local (mockup UI)
+  // States: Sản phẩm local (đồng bộ với sanPhams khi có đơn hàng mới trừ kho)
   const [localSanPhams, setLocalSanPhams] = useState(sanPhams);
+
+  useEffect(() => {
+    setLocalSanPhams(sanPhams);
+  }, [sanPhams]);
 
   const handleAddProduct = () => {
     const name = window.prompt("Nhập tên sản phẩm mới:");

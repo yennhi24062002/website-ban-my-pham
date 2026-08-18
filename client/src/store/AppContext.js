@@ -299,6 +299,8 @@ export function AppProvider({ children }) {
         phuongthuc: form.phuongthuc,
         ngaydat: new Date().toLocaleString("vi-VN")
       });
+      // Tải lại dữ liệu sản phẩm & tồn kho từ backend ngay sau khi trừ kho thành công
+      await taiDuLieu();
       return data;
     } catch (error) {
       console.error("Lỗi đặt hàng:", error);
