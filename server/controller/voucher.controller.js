@@ -15,7 +15,12 @@ const VoucherController = {
       const [rows] = await db.query(
         `SELECT v.mavoucher, v.macode, v.ten, v.giatri, v.loai,
                 v.dieukien_tien_toi_thieu, v.ngaybatdau, v.ngayhethan, v.trangthai,
-                vn.mavoucher_nd, COALESCE(v.macode, CONCAT('VC-KH', vn.manguoidung, '-', vn.mavoucher_nd)) as ma_serial,
+                vn.mavoucher_nd, 
+                COALESCE(
+                  NULLIF(vn.ma_serial, ''),
+                  CONCAT('VC-KH0', vn.manguoidung, '-', LPAD(vn.mavoucher_nd, 4, '0')),
+                  v.macode
+                ) as ma_serial,
                 vn.ngaytang, vn.sudung, vn.madonhang_sudung
          FROM voucher_nguoidung vn
          JOIN voucher v ON v.mavoucher = vn.mavoucher

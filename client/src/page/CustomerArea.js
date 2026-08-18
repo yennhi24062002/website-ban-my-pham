@@ -472,7 +472,7 @@ function CustomerArea({
               <option value="">--- Không áp dụng voucher ---</option>
               {danhSachVoucher.filter(v => !v.sudung).map(v => {
                 const hopLe = Number(v.giatri) <= tongTien * 0.5;
-                const codeDuyNhat = v.ma_serial || v.macode || (`VC-${v.mavoucher_nd}`);
+                const codeDuyNhat = v.ma_serial || (`VC-KH0${v.manguoidung || 1}-${v.mavoucher_nd}`);
                 return (
                   <option
                     key={v.mavoucher_nd}
@@ -751,7 +751,7 @@ function CustomerArea({
                         </strong><br/>
                         <span style={{ fontSize: 13, color: "#666" }}>{v.ten}</span><br/>
                         <span style={{ fontSize: 12, color: "#999" }}>
-                          Mã: <code>{v.macode}</code> · HSD: {new Date(v.ngayhethan).toLocaleDateString("vi-VN")}
+                          Mã Serial: <code style={{ background: "#f8bbd0", color: "#880e4f", padding: "2px 6px", borderRadius: 4, fontWeight: "bold" }}>{v.ma_serial || v.macode}</code> · HSD: {new Date(v.ngayhethan).toLocaleDateString("vi-VN")}
                         </span>
                       </div>
                       <div>
