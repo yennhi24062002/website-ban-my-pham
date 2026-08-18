@@ -1,247 +1,293 @@
-# 📋 TÀI LIỆU NGHIỆP VỤ HỆ THỐNG WEBSITE BÁN MỸ PHẨM
-**Sinh viên:** Phạm Yến Nhi — **MSSV:** DH52201160 | **GVHD:** ThS. Hà Văn Tùng
+# 📘 TÀI LIỆU DUY NHẤT TOÀN DIỆN NGHIỆP VỤ & CODE (BẢO VỆ ĐỒ ÁN)
+
+**Đề tài:** Website Bán Mỹ Phẩm Tự Động (ReactJS + Node.js Express + TiDB Cloud MySQL)  
+**Sinh viên thực hiện:** Phạm Yến Nhi — MSSV: DH52201160  
+**Giảng viên hướng dẫn:** ThS. Hà Văn Tùng  
 
 ---
 
-## 1. ĐĂNG KÝ / ĐĂNG NHẬP TÀI KHOẢN
+## 💡 HƯỚNG DẪN DÙNG TÀI LIỆU MASTER DUY NHẤT
 
-**Luồng nghiệp vụ:**
-- Khách hàng điền **Họ tên, Email, Mật khẩu, Số điện thoại** → hệ thống kiểm tra email/SĐT đã tồn tại chưa → mã hóa mật khẩu bằng `bcrypt` → lưu vào bảng `nguoidung`.
-- Đăng nhập: so sánh mật khẩu đã mã hóa → trả về `JWT Token` → lưu vào `localStorage` → tự động phân quyền Admin/Khách hàng.
-
-**Bảng DB liên quan:** `nguoidung`, `vaitro`
-
-```sql
--- Kiểm tra đăng nhập
-SELECT * FROM nguoidung WHERE email = ? AND trangthai = 'hoatdong'
--- Nếu đúng mật khẩu → trả về JWT token kèm vaiTro
-```
-
-**File code:** `server/controller/auth.controller.js`
+Đây là **TÀI LIỆU MASTER DUY NHẤT** tổng hợp 100% toàn bộ kiến thức nghiệp vụ, luồng chạy code, vị trí file, dòng code, bảng CSDL và bộ câu hỏi bảo vệ đồ án. Tài liệu được trình bày cực kỳ gọn gàng, sạch đẹp, không tràn màn hình trong VS Code.
 
 ---
 
-## 2. XEM DANH SÁCH & TÌM KIẾM SẢN PHẨM
+# PHẦN I: BẢNG TRA CỨU NHANH 20 CHỨC NĂNG & VỊ TRÍ FILE CODE
 
-**Luồng nghiệp vụ:**
-- Hệ thống load **16 sản phẩm** từ DB (Chăm sóc da, Làm sạch, Chống nắng, Trang điểm/Son).
-- Khách hàng có thể lọc theo **danh mục** hoặc **tìm kiếm từ khóa** ("Son", "Cocoon", "Klairs"...).
-- Tìm kiếm dò trong tên sản phẩm, mô tả, thương hiệu.
-
-**Bảng DB:** `sanpham`, `danhmuc`, `thuonghieu`, `tonkho`, `luachon_sanpham`
-
-```sql
-SELECT p.*, dm.tendanhmuc, th.tenthuonghieu, tk.soluongton
-FROM sanpham p
-JOIN danhmuc dm ON dm.madanhmuc = p.madanhmuc
-LEFT JOIN thuonghieu th ON th.mathuonghieu = p.mathuonghieu
-LEFT JOIN tonkho tk ON tk.masanpham = p.masanpham
-ORDER BY p.masanpham ASC
-```
-
-**File code:** `server/controller/product.controller.js` → hàm `layDanhSachSanPham()`  
-**Frontend:** `client/src/store/AppContext.js` → `danhSachLoc` (useMemo lọc theo từ khóa)
-
----
-
-## 3. XEM CHI TIẾT SẢN PHẨM & CHỌN BIẾN THỂ
-
-**Luồng nghiệp vụ:**
-- Khách click sản phẩm → hiện trang chi tiết: ảnh, mô tả, thành phần, hướng dẫn sử dụng.
-- Chọn **biến thể**: dung tích (150ml/500ml) hoặc màu sắc (Son MAC: Ruby Woo/Russian Red/Diva; Son 3CE: Denim/Over Dose/Berry/Coral).
-- Giá hiển thị theo biến thể được chọn.
-
-**Bảng DB:** `luachon_sanpham` (mausac, loai, dungtich, giaban, soluongton)
-
-**File code:** `client/src/component/ProductDetail.js`
+| STT | Tên Chức Năng Nghiệp Vụ | File Frontend (Giao diện) | File Backend (Xử lý) | Bảng Database SQL |
+|---|---|---|---|---|
+| 1 | **Đăng ký & Đăng nhập (JWT & Bcrypt)** | `LoginForm.js` (Dòng 15-65) | `auth.controller.js` (Dòng 25-90) | `nguoidung`, `vaitro` |
+| 2 | **Quản lý Hồ sơ cá nhân & Đổi mật khẩu** | `CustomerArea.js` (Dòng 40-90) | `customer.controller.js` | `nguoidung` |
+| 3 | **Danh sách Sản phẩm & Lọc Tức thì** | `ProductList.js` (Dòng 15-82)<br>`AppContext.js` (Dòng 105-123) | `product.controller.js` (Dòng 60-99) | `sanpham`, `danhmuc`, `thuonghieu` |
+| 4 | **Chi tiết Sản phẩm & Chọn Biến thể màu son** | `ProductDetail.js` (Dòng 40-210) | `product.controller.js` (Dòng 100-140) | `sanpham`, `luachon_sanpham` |
+| 5 | **Thêm vào Giỏ hàng & Đồng bộ LocalStorage** | `AppContext.js` (Dòng 160-210)<br>`Header.js` (Dòng 50-90) | `cart.controller.js` | `giohang`, `chitietgiohang` |
+| 6 | **Sổ Địa chỉ Giao hàng & Đặt Mặc định** | `CustomerArea.js` (Dòng 66-85) | `customer.controller.js` | `diachi` |
+| 7 | **Đặt hàng, Tính giá giảm & Trừ tồn kho 3 bảng** | `CustomerArea.js` (Dòng 150-240) | `order.controller.js` (Dòng 111-330) | `donhang`, `chitietdonhang`, `tonkho` |
+| 8 | **Thanh toán QR Code VietQR & Giả lập Demo** | `ThanhToanQR.js` (Dòng 1-98) | `order.controller.js` (Dòng 147, 299) | `thanhtoan`, `donhang` |
+| 9 | **Thanh toán Tiền mặt khi nhận hàng (COD)** | `ThanhToanTienMat.js` | `order.controller.js` (Dòng 150-168) | `donhang`, `thanhtoan` |
+| 10 | **Voucher Serial Độc nhất (`[VC-KH01-0001]`)** | `CustomerArea.js` (Dòng 473-501) | `voucher.controller.js` (Dòng 5-60) | `voucher`, `voucher_nguoidung` |
+| 11 | **Gửi Email Xác nhận Tự động (Gmail SSL 465)** | Nền Backend tự động gọi | `server/utils/email.js` (Dòng 5-160) | Gửi trực tiếp qua Gmail API |
+| 12 | **Xem & In Hóa đơn Điện tử chuẩn Unicode** | `CustomerArea.js` (Dòng 164-260) | `order.controller.js` (Dòng 80-108) | `donhang`, `chitietdonhang` |
+| 13 | **Theo dõi Lịch sử Đơn hàng & Tiến trình** | `CustomerArea.js` (Dòng 575-650) | `order.controller.js` (Dòng 30-75) | `donhang`, `lichsutrangthaidon` |
+| 14 | **Yêu cầu Trả hàng & Hoàn Kho khi nhận hàng** | `CustomerArea.js` (Dòng 260-310) | `return.controller.js` (Dòng 5-150) | `yeucautranhang`, `tonkho` |
+| 15 | **Chiến dịch Khuyến mãi Sale % theo Sản phẩm** | `PromotionManagement.js` (Dòng 20-110) | `khuyenmai.controller.js` (Dòng 10-80) | `khuyenmai`, `sanpham_khuyenmai` |
+| 16 | **Thống kê Doanh thu & Lượt truy cập RAM** | `Dashboard.js` (Dòng 10-120) | `stats.controller.js` (Dòng 14-48) | `donhang`, `sanpham`, `nguoidung` |
+| 17 | **Quản lý Tồn kho & Cảnh báo Hết hàng rực đỏ** | `InventoryManagement.js` | `admin.controller.js` | `tonkho`, `sanpham` |
+| 18 | **Quản lý Danh mục & Thương hiệu Mỹ phẩm** | `CategoryManagement.js`, `BrandManagement.js` | `category.controller.js` | `danhmuc`, `thuonghieu` |
+| 19 | **Đánh giá Sản phẩm (Chấm 1-5 sao & Nhận xét)** | `ProductDetail.js` | `review.controller.js` | `danhgia` |
+| 20 | **Hỏi đáp Thắc mắc Sản phẩm Khách & Admin** | `ProductDetail.js` | `review.controller.js` | `hoidap` |
 
 ---
 
-## 4. THÊM VÀO GIỎ HÀNG
-
-**Luồng nghiệp vụ:**
-- Khách chọn biến thể → nhấn "THÊM VÀO GIỎ HÀNG" → kiểm tra tồn kho biến thể (`soluongton > 0`).
-- Giỏ hàng lưu trong `localStorage` (phía client) và bảng `chitietgiohang` trong DB.
-- Hiển thị số lượng item trên icon giỏ hàng.
-
-**Bảng DB:** `giohang`, `chitietgiohang`
-
-**File code:** `client/src/store/AppContext.js` → hàm `themVaoGio()`
+# PHẦN II: GIẢI THÍCH CHI TIẾT 20 CHỨC NĂNG NGHIỆP VỤ & LUỒNG CODE A - Z
 
 ---
 
-## 5. ĐẶT HÀNG & THANH TOÁN (Quan trọng)
+## 📌 CHỨC NĂNG 1: ĐĂNG KÝ VÀ ĐĂNG NHẬP TÀI KHOẢN (JWT & Bcrypt)
 
-**Luồng nghiệp vụ:**
-1. Khách nhập thông tin người nhận (Họ tên, SĐT, Địa chỉ).
-2. Chọn voucher (nếu có mã serial `VC-xxx`).
-3. Chọn phương thức: **Tiền mặt COD** hoặc **Chuyển khoản QR Code**.
-4. Nhấn **"Xác nhận đặt hàng"** → **Hệ thống TỰ ĐỘNG TRỪ TỒN KHO NGAY** (không cần đợi admin duyệt).
-5. Đơn hàng tạo ra với trạng thái `choxacnhan`.
-6. Hệ thống gửi email xác nhận tự động.
-
-**Tồn kho bị trừ ở 3 bảng đồng thời:**
-```sql
-UPDATE luachon_sanpham SET soluongton = GREATEST(soluongton - ?, 0) WHERE maluachon = ?
-UPDATE tonkho SET soluongton = GREATEST(soluongton - ?, 0) WHERE masanpham = ?
-UPDATE sanpham SET soluongton = GREATEST(soluongton - ?, 0) WHERE masanpham = ?
-```
-
-**Áp dụng voucher:** Hệ thống kiểm tra `ma_serial` trong `voucher_nguoidung.sudung = 0` → nếu hợp lệ, trừ `giatri` vào tổng tiền → đánh dấu `sudung = 1`.
-
-**Bảng DB:** `donhang`, `chitietdonhang`, `thanhtoan`, `lichsutrangthaidon`, `luachon_sanpham`, `tonkho`
-
-**File code:** `server/controller/order.controller.js` → hàm `create()` (dùng `Transaction` + `FOR UPDATE`)
+- **Nghiệp vụ:** Cho phép người dùng tạo tài khoản khách hàng để mua hàng. Mật khẩu được mã hóa băm bằng `bcryptjs`. Đăng nhập thành công trả về **JWT Token** lưu tại `localStorage`.
+- **Luồng A-Z:** 
+  1. Khách bấm "Đăng nhập" trên Header ➔ Mở Modal `LoginForm.js`.
+  2. Khách nhập Email & Mật khẩu ➔ Bấm "Xác nhận".
+  3. React gọi `axios.post('/api/auth/login', { email, matkhau })`.
+  4. Backend xử lý tại `server/controller/auth.controller.js`: SQL `SELECT * FROM nguoidung WHERE email = ?`.
+  5. Dùng `bcrypt.compare()` kiểm tra mật khẩu ➔ Tạo Token `jwt.sign()` trả về Client.
+- **File Code:** Frontend: `client/src/component/LoginForm.js` (Dòng 15-65) | Backend: `server/controller/auth.controller.js` (Dòng 25-90).
 
 ---
 
-## 6. LỊCH SỬ ĐƠN HÀNG & VOUCHER
+## 📌 CHỨC NĂNG 2: QUẢN LÝ HỒ SƠ CÁ NHÂN & ĐỔI MẬT KHẨU
 
-**Luồng nghiệp vụ:**
-- Khách xem tab "Lịch sử đơn" → hiển thị tất cả đơn hàng kèm trạng thái (Chờ xác nhận / Đang giao / Hoàn thành).
-- Nhấn vào đơn hàng → xem **Hóa đơn điện tử** chi tiết (Modal HoaDon).
-- Tab "Voucher của tôi" → hiển thị danh sách voucher kèm **mã serial độc nhất** (`VC-YSI93J91`).
-
-**Bảng DB:** `donhang`, `chitietdonhang`, `voucher`, `voucher_nguoidung` (có cột `ma_serial`)
-
-**File code:** `server/controller/voucher.controller.js` → `getMyVouchers()`
+- **Nghiệp vụ:** Cập nhật Họ tên, Số điện thoại và Đổi mật khẩu. Mật khẩu mới được mã hóa lại bằng `bcrypt`.
+- **Luồng A-Z:** `CustomerArea.js` gọi `PUT /api/customers/:id` ➔ Backend `customer.controller.js` mã hóa `bcrypt.hash()` ➔ SQL `UPDATE nguoidung SET ...`.
 
 ---
 
-## 7. HỦY ĐƠN HÀNG
+## 📌 CHỨC NĂNG 3: DANH SÁCH SẢN PHẨM & TÌM KIẾM TỨC THÌ (Search & Filter)
 
-**Luồng nghiệp vụ:**
-- Khách chỉ có thể hủy đơn ở trạng thái `choxacnhan` (chưa giao hàng).
-- Sau khi hủy → **Tồn kho được hoàn lại** về cả 3 bảng.
-- Trạng thái chuyển sang `dahuy`.
-
-**File code:** `server/controller/order.controller.js` → hàm `cancel()`
+- **Nghiệp vụ:** Hiển thị 16 sản phẩm mỹ phẩm kèm giá gốc, giá sau giảm và tiến trình số lượng đã bán. Tìm kiếm và lọc tức thì theo tên, loại da, danh mục không reload trang. Thẻ sản phẩm hiển thị gọn gàng, đã gỡ bỏ chữ màu hồng rác `tag-khuyen-mai`.
+- **Luồng A-Z:** `AppContext.js` gọi `GET /api/products` ➔ Backend `product.controller.js` chạy SQL JOIN liên bảng `sanpham`, `danhmuc`, `thuonghieu`, `tonkho`, `khuyenmai` ➔ Khách gõ từ khóa, hàm `useMemo` lọc ngay mảng state trong 0.01s.
+- **File Code:** Frontend: `client/src/component/ProductList.js` (Dòng 15-82), `client/src/store/AppContext.js` (Dòng 105-123) | Backend: `server/controller/product.controller.js` (Dòng 60-99).
 
 ---
 
-## 8. DUYỆT ĐƠN HÀNG (Admin)
+## 📌 CHỨC NĂNG 4: CHI TIẾT SẢN PHẨM & CHỌN BIẾN THỂ MÀU SON
 
-**Luồng nghiệp vụ:**
-- Admin đăng nhập vào trang quản trị → xem danh sách đơn hàng.
-- Chuyển trạng thái: `choxacnhan` → `danggiao` → `hoanthanh`.
-- Mỗi lần đổi trạng thái → ghi vào `lichsutrangthaidon`.
-
-**Bảng DB:** `donhang`, `lichsutrangthaidon`
-
-**File code:** `server/controller/order.controller.js` → hàm `updateStatus()`
+- **Nghiệp vụ:** Xem công dụng, thành phần và chọn màu son riêng biệt (MAC: Ruby Woo, Russian Red, Diva; 3CE: Denim, Over Dose, Berry, Coral). Giá và tồn kho cập nhật động theo từng màu.
+- **Luồng A-Z:** Mở `/san-pham/:id` (`ProductDetail.js`) ➔ Backend chạy `SELECT * FROM luachon_sanpham WHERE masanpham = ?` ➔ Chọn nút màu ➔ Giao diện cập nhật tồn kho khả dụng của màu đó.
+- **File Code:** `client/src/component/ProductDetail.js` (Dòng 40-210), `client/src/constant/sanPham.js` (Dòng 280-318).
 
 ---
 
-## 9. YÊU CẦU TRẢ HÀNG & HOÀN TỒN KHO (Quan trọng)
+## 📌 CHỨC NĂNG 5: THÊM VÀO GIỎ HÀNG & ĐỒNG BỘ LOCALSTORAGE
 
-**Luồng nghiệp vụ:**
-1. Khách gửi yêu cầu trả hàng (chỉ khi đơn `hoanthanh`).
-2. Đơn chuyển sang trạng thái `trahang`.
-3. Admin duyệt yêu cầu → `duyet_chohanghoi`.
-4. Khách gửi hàng về, Admin xác nhận nhận hàng → **TỒN KHO ĐƯỢC HOÀN LẠI** vào cả 3 bảng.
-
-**Tồn kho được cộng lại:**
-```sql
-UPDATE tonkho SET soluongton = soluongton + ? WHERE masanpham = ?
-UPDATE sanpham SET soluongton = soluongton + ? WHERE masanpham = ?
-UPDATE luachon_sanpham SET soluongton = soluongton + ? WHERE maluachon = ?
-```
-
-**Bảng DB:** `yeucautranhang`, `chitietdonhang`, `tonkho`, `luachon_sanpham`
-
-**File code:** `server/controller/return.controller.js` → hàm `confirmReceived()`
+- **Nghiệp vụ:** Đưa sản phẩm kèm màu sắc vào giỏ. Tự động kiểm tra số lượng tồn kho. Lưu giỏ hàng vào `localStorage` giữ nguyên khi tắt trang.
+- **Luồng A-Z:** Bấm "Thêm vào giỏ" ➔ Gọi `themVaoGio()` trong `AppContext.js` (Dòng 160-210) ➔ Cập nhật State `gioHang` & `localStorage.setItem('cart', ...)`.
 
 ---
 
-## 10. ĐÁNH GIÁ & HỎI ĐÁP SẢN PHẨM
+## 📌 CHỨC NĂNG 6: SỔ ĐỊA CHỈ GIAO HÀNG & ĐẶT MẶC ĐỊNH
 
-**Luồng:** Khách đặt hàng thành công → có thể đánh giá sản phẩm (1-5 sao, bình luận). Admin có thể trả lời câu hỏi.
-
-**Bảng DB:** `danhgia`, `hoidap`
-
----
-
-## 11. QUẢN LÝ VOUCHER (Admin)
-
-**Luồng:**
-- Admin tạo voucher (Tên, Loại giảm giá, Giá trị, Hạn sử dụng).
-- Admin cấp voucher cho từng khách hàng → hệ thống **tự sinh mã serial độc nhất** (`VC-KH{userId}-XXXXXX`).
-- Mỗi lần cấp là 1 dòng trong `voucher_nguoidung` với `ma_serial` riêng.
-
-**Bảng DB:** `voucher`, `voucher_nguoidung` (ma_serial UNIQUE)
-
-**File code:** `server/controller/voucher.controller.js` → hàm `grantVoucher()`
+- **Nghiệp vụ:** Lưu nhiều địa chỉ nhận hàng, chọn 1 địa chỉ Mặc định (`macdinh = 1`). Khi đặt hàng, hệ thống tự điền sẵn địa chỉ mặc định.
+- **File Code:** `client/src/page/CustomerArea.js` (Dòng 66-85), `server/controller/customer.controller.js`.
 
 ---
 
-## 12. CHIẾN DỊCH KHUYẾN MÃI THEO SẢN PHẨM (Admin)
+## 📌 CHỨC NĂNG 7: ĐẶT HÀNG, TÍNH GIÁ GIẢM & TRỪ TỒN KHO 3 BẢNG (CỐT LÕI)
 
-**Luồng:**
-- Admin tạo chiến dịch giảm giá (% giảm, ngày bắt đầu/kết thúc).
-- Chọn sản phẩm áp dụng.
-- Khi khách xem sản phẩm, giá hiển thị đã trừ % khuyến mãi.
-
-**Bảng DB:** `khuyenmai` (makhuyenmai, tenkhuyenmai, phantramgiam), `sanpham_khuyenmai`
-
----
-
-## 13. QUẢN LÝ TỒN KHO (Admin)
-
-**Luồng:**
-- Admin xem tồn kho từng sản phẩm.
-- Cảnh báo khi tồn kho dưới mức tối thiểu (`soluongtoithieu`).
-- Nhập thêm hàng → cập nhật `tonkho`.
-
-**Bảng DB:** `tonkho` (soluongton, soluongtoithieu)
+- **Nghiệp vụ:** Khách nhập thông tin, chọn mã **Voucher Serial** và thanh toán. 
+  - **Tính đúng giá giảm %:** Hóa đơn lưu đúng giá đã trừ giảm giá (`item.dongia`).
+  - **Trừ kho tự động 3 bảng:** Số lượng tồn bị trừ tức thì ở `luachon_sanpham`, `tonkho`, và `sanpham`.
+- **Luồng A-Z:**
+  1. Bấm "Xác nhận đặt hàng" (`CustomerArea.js`) ➔ POST `/api/orders`.
+  2. Backend mở Transaction: `await conn.beginTransaction()`.
+  3. Khóa dòng dữ liệu chống âm kho: `SELECT ... FOR UPDATE`.
+  4. Lấy đơn giá đã giảm % `const donGia = item.dongia` ➔ `INSERT INTO chitietdonhang`.
+  5. Trừ tồn kho 3 bảng: `UPDATE luachon_sanpham ...`, `UPDATE tonkho ...`, `UPDATE sanpham ...`.
+  6. Đánh dấu Voucher Serial đã dùng: `UPDATE voucher_nguoidung SET sudung = 1`.
+  7. `await conn.commit()` ➔ Tự động kích hoạt gửi Email xác nhận qua Gmail SSL 465.
+- **File Code:** Frontend: `client/src/page/CustomerArea.js` (Dòng 150-240) | Backend: `server/controller/order.controller.js` (Dòng 111-330).
 
 ---
 
-## 14. THỐNG KÊ DOANH THU (Admin)
+## 📌 CHỨC NĂNG 8: THANH TOÁN QR CODE VIETQR & GIẢ LẬP DEMO
 
-**Luồng:**
-- Dashboard hiển thị: Doanh thu theo ngày/tháng, Top sản phẩm bán chạy, Số đơn hàng theo trạng thái.
-- Biểu đồ line chart doanh thu 12 tháng.
-
-**Bảng DB:** `donhang`, `chitietdonhang`
+- **Nghiệp vụ:** Khách chọn phương thức **"QR Code"** ➔ Tự tạo mã QR động VietQR chèn STK shop `1017833075` (Vietcombank), Tên chủ TK `PHAM YEN NHI`, Số tiền chính xác và Nội dung `HONGXINH DH<Mã_Đơn>`.
+- **Chế độ Giả lập Demo:** Cung cấp nút **"Giả lập: Khách đã quét QR & chuyển tiền"** gửi flag `isDemo: true` giúp sinh mã giao dịch `QR<TIMESTAMP><RANDOM>` và đánh dấu trạng thái `dathanhtoan` để tiện demo chấm bài.
+- **File Code:** Frontend: `client/src/component/ThanhToanQR.js` (Dòng 36-44 ảnh QR, Dòng 80-90 nút Demo) | Backend: `server/controller/order.controller.js` (Dòng 147, 299-304).
 
 ---
 
-## 15. GỬI EMAIL XÁC NHẬN ĐƠN HÀNG
+## 📌 CHỨC NĂNG 9: THANH TOÁN TIỀN MẶT KHI NHẬN HÀNG (COD)
 
-**Luồng:** Sau khi đơn hàng tạo thành công → server gửi email HTML tự động đến email khách hàng với đầy đủ thông tin đơn.
-
-**Cấu hình:** Cần set biến môi trường `EMAIL_USER` và `EMAIL_PASS` trên server host (Render.com):
-```
-EMAIL_USER = phamyennhi2462002@gmail.com
-EMAIL_PASS = lilbbuxhaoswthgu   ← Gmail App Password (không phải mật khẩu thường)
-```
-
-**File code:** `server/utils/email.js`
+- **Nghiệp vụ:** Khách trả tiền mặt trực tiếp cho Shipper khi giao hàng. Đơn khởi tạo ở trạng thái `chuathanhtoan`.
+- **File Code:** `client/src/component/ThanhToanTienMat.js`, `server/controller/order.controller.js` (Dòng 150-168).
 
 ---
 
-## BẢNG CẤU TRÚC DATABASE ĐẦY ĐỦ
+## 📌 CHỨC NĂNG 10: MÃ SERIAL VOUCHER ĐỘC NHẤT (`[VC-KH01-0001]`)
 
-| STT | Bảng | Chức năng chính |
-|---|---|---|
-| 1 | `vaitro` | Phân quyền: admin / khachhang |
-| 2 | `nguoidung` | Thông tin tài khoản người dùng |
-| 3 | `diachi` | Địa chỉ giao hàng mặc định |
-| 4 | `danhmuc` | Danh mục sản phẩm (4 loại) |
-| 5 | `thuonghieu` | Thương hiệu (Cocoon, Klairs...) |
-| 6 | `sanpham` | 16 sản phẩm chính |
-| 7 | `luachon_sanpham` | Biến thể (màu sắc, dung tích) |
-| 8 | `tonkho` | Tồn kho tổng theo sản phẩm |
-| 9 | `giohang` | Giỏ hàng |
-| 10 | `chitietgiohang` | Chi tiết sản phẩm trong giỏ |
-| 11 | `donhang` | Đơn hàng |
-| 12 | `chitietdonhang` | Chi tiết từng sản phẩm trong đơn |
-| 13 | `thanhtoan` | Thông tin thanh toán |
-| 14 | `lichsutrangthaidon` | Lịch sử thay đổi trạng thái đơn |
-| 15 | `voucher` | Voucher khuyến mãi (macode độc nhất) |
-| 16 | `voucher_nguoidung` | Phân phối voucher → **ma_serial độc nhất** |
-| 17 | `yeucautranhang` | Yêu cầu đổi/trả hàng |
-| 18 | `danhgia` | Đánh giá sản phẩm |
-| 19 | `hoidap` | Hỏi đáp sản phẩm |
-| 20 | `khuyenmai` | Chiến dịch khuyến mãi |
-| 21 | `sanpham_khuyenmai` | Sản phẩm áp dụng chiến dịch |
+- **Nghiệp vụ:** Mỗi voucher cấp cho khách có mã Serial riêng dạng `[VC-KH01-0001]`. Đảm bảo kịch bản kiểm thử `TC-EX-02`: Mỗi thẻ chỉ dùng đúng 1 lần duy nhất, khi dùng xong mã tự biến mất khỏi dropdown.
+- **File Code:** Frontend: `client/src/page/CustomerArea.js` (Dòng 473-501) | Backend: `server/controller/voucher.controller.js` (Dòng 5-60), `server/controller/order.controller.js` (Dòng 274-290).
+
+---
+
+## 📌 CHỨC NĂNG 11: GỬI EMAIL XÁC NHẬN ĐƠN HÀNG TỰ ĐỘNG (Gmail SSL 465)
+
+- **Nghiệp vụ:** Sau khi commit đơn thành công, hệ thống tự động soạn Email HTML chứa chi tiết đơn hàng và gửi thẳng đến hòm thư người mua qua cổng **Gmail SMTP 465 SSL** (`smtp.gmail.com:465`).
+- **File Code:** `server/utils/email.js` (Dòng 5-160).
+
+---
+
+## 📌 CHỨC NĂNG 12: XEM & IN HÓA ĐƠN ĐIỆN TỬ CHUẨN UNICODE
+
+- **Nghiệp vụ:** Cho phép xem Modal Hóa đơn điện tử sang trọng và bấm nút **"In hóa đơn"** in trực tiếp ra giấy qua cửa sổ trình duyệt chuẩn tiếng Việt Unicode không bị lỗi font.
+- **File Code:** `client/src/page/CustomerArea.js` (Dòng 164-260), `server/controller/order.controller.js` (Dòng 80-108).
+
+---
+
+## 📌 CHỨC NĂNG 13: THEO DÕI LỊCH SỬ ĐƠN HÀNG & TIẾN TRÌNH GIAO HÀNG
+
+- **Nghiệp vụ:** Xem danh sách đơn hàng đã đặt, theo dõi tiến trình chuyển trạng thái theo thời gian thực (`ChoXacNhan ➔ DangGiao ➔ HoanThanh`).
+- **File Code:** `client/src/page/CustomerArea.js` (Dòng 575-650), `server/controller/order.controller.js` (Dòng 30-75).
+
+---
+
+## 📌 CHỨC NĂNG 14: YÊU CẦU TRẢ HÀNG & HOÀN KHO KHI NHẬN HÀNG
+
+- **Nghiệp vụ:** Đơn hoàn thành được quyền yêu cầu trả hàng. Khi Admin nhận được hàng và bấm **"Đã nhận hàng trả"**, hệ thống **TỰ ĐỘNG CỘNG HOÀN LẠI SỐ LƯỢNG KHO VỀ CẢ 3 BẢNG** (`tonkho`, `sanpham`, `luachon_sanpham`).
+- **File Code:** `client/src/page/CustomerArea.js` (Dòng 260-310), `server/controller/return.controller.js` (Dòng 94-145).
+
+---
+
+## 📌 CHỨC NĂNG 15: CHIẾN DỊCH KHUYẾN MÃI SALE % THEO SẢN PHẨM
+
+- **Nghiệp vụ:** Admin tạo chiến dịch Siêu Sale giảm % cho sản phẩm. Trang khách tự động hiển thị nhãn % đỏ và tính giá đã giảm. Hết hạn Sale, thẻ sản phẩm tự trở về giao diện sạch đẹp.
+- **File Code:** `client/src/component/admin/PromotionManagement.js` (Dòng 20-110), `server/controller/khuyenmai.controller.js` (Dòng 10-80).
+
+---
+
+## 📌 CHỨC NĂNG 16: THỐNG KÊ DOANH THU & LƯỢT TRUY CẬP RAM (Admin Dashboard)
+
+- **Nghiệp vụ:** Hiển thị 5 thẻ KPI: Tổng sản phẩm, Tổng khách hàng, Tổng đơn hàng, Tổng doanh thu (`WHERE trangthaidonhang = 'hoanthanh'`) và Số lượt truy cập thời gian thực lưu ngầm trong RAM (`globalVisitorCount++`).
+- **File Code:** `client/src/component/admin/Dashboard.js` (Dòng 10-120), `server/controller/stats.controller.js` (Dòng 14-48).
+
+---
+
+## 📌 CHỨC NĂNG 17: QUẢN LÝ TỒN KHO & CẢNH BÁO HẾT HÀNG RỰC ĐỎ
+
+- **Nghiệp vụ:** Nhập số lượng kho. Khi tồn kho nhỏ hơn hoặc bằng `soluongtoithieu`, dòng sản phẩm tự đổi màu đỏ rực cảnh báo Thủ kho nhập hàng.
+- **File Code:** `client/src/component/admin/InventoryManagement.js`, `server/controller/admin.controller.js`.
+
+---
+
+## 📌 CHỨC NĂNG 18: QUẢN LÝ DANH MỤC & THƯƠNG HIỆU MỸ PHẨM
+
+- **Nghiệp vụ:** Admin Thêm/Sửa/Xóa Danh mục (Skincare, Makeup) và Thương hiệu (Cocoon, Klairs, MAC, 3CE...).
+- **File Code:** `server/controller/category.controller.js`, `server/controller/brand.controller.js`.
+
+---
+
+## 📌 CHỨC NĂNG 19: ĐÁNH GIÁ SẢN PHẨM (Chấm 1 - 5 sao & Nhận xét)
+
+- **Nghiệp vụ:** Khách mua hàng thành công được chấm 1-5 sao và viết nhận xét thực tế cho sản phẩm.
+- **File Code:** `client/src/component/ProductDetail.js`, `server/controller/review.controller.js`.
+
+---
+
+## 📌 CHỨC NĂNG 20: HOỎI ĐÁP THẮC MẮC SẢN PHẨM KHÁCH & ADMIN
+
+- **Nghiệp vụ:** Khách đặt câu hỏi thắc mắc dưới sản phẩm ➔ Admin vào trả lời trực tiếp.
+- **File Code:** `client/src/component/ProductDetail.js`, `server/controller/review.controller.js`.
+
+---
+
+# PHẦN III: DỮ LIỆU & Ý NGHĨA 21 BẢNG DATABASE SQL (A - Z)
+
+| STT | Tên Bảng SQL | Khóa Chính (PK) | Ý Nghĩa Nghiệp Vụ Vận Hành |
+|---|---|---|---|
+| 1 | `vaitro` | `mavaitro` | Phân quyền vai trò: 1 - Admin, 2 - Khách hàng. |
+| 2 | `nguoidung` | `manguoidung` | Lưu tài khoản, Email, Họ tên, Mật khẩu đã băm Bcrypt. |
+| 3 | `diachi` | `madiachi` | Sổ địa chỉ giao hàng của từng tài khoản. |
+| 4 | `danhmuc` | `madanmuc` | Phân loại mỹ phẩm (Chăm sóc da, Trang điểm, Làm sạch, Chống nắng). |
+| 5 | `thuonghieu` | `mathuonghieu` | Hãng sản xuất (Cocoon, Klairs, L'Oreal, MAC, 3CE, Anessa...). |
+| 6 | `sanpham` | `masanpham` | Chứa 16 sản phẩm chính, giá gốc, hình ảnh đại diện, công dụng. |
+| 7 | `luachon_sanpham` | `maluachon` | Biến thể màu sắc son / dung tích (`mausac`, `giaban`, `soluongton`). |
+| 8 | `tonkho` | `matonkho` | Quản lý tồn kho tổng theo sản phẩm (`soluongton`, `soluongtoithieu`). |
+| 9 | `giohang` | `magiohang` | Giỏ hàng tạm thời của từng tài khoản. |
+| 10 | `chitietgiohang` | `machitietgiohang` | Chi tiết các mặt hàng nằm trong giỏ (`masanpham`, `maluachon`, `soluong`). |
+| 11 | `donhang` | `madonhang` | Đơn hàng chính (Tổng tiền, Trạng thái đơn, Người nhận). |
+| 12 | `chitietdonhang` | `machitietdonhang` | Chi tiết từng món trong đơn (`soluong`, `dongia` đã giảm %, `thanhtien`). |
+| 13 | `thanhtoan` | `mathanhtoan` | Nhật ký giao dịch thanh toán (COD hoặc QR Code Chuyển khoản). |
+| 14 | `lichsutrangthaidon` | `malichsu` | Lịch sử chuyển trạng thái (ChoXacNhan ➔ DangGiao ➔ HoanThanh ➔ TraHang). |
+| 15 | `voucher` | `mavoucher` | Chương trình mã giảm giá do Admin phát hành. |
+| 16 | `voucher_nguoidung` | `mavoucher_nd` | Phân phối Voucher ➔ **Mã Serial `ma_serial` độc nhất (`[VC-KH01-0001]`)**. |
+| 17 | `yeucautranhang` | `mayeucau` | Yêu cầu trả hàng, lý do trả, ảnh bằng chứng và trạng thái xử lý. |
+| 18 | `danhgia` | `madanhgia` | Chấm sao (1 - 5★) và nhận xét của khách sau khi mua hàng. |
+| 19 | `hoidap` | `mahoidap` | Khung câu hỏi thắc mắc của khách và câu trả lời giải đáp từ Admin. |
+| 20 | `khuyenmai` | `makhuyenmai` | Chiến dịch Siêu Sale giảm giá % theo dòng sản phẩm. |
+| 21 | `sanpham_khuyenmai` | `masanpham_km` | Bảng trung gian nối Sản phẩm với Đợt Khuyến mãi đang chạy. |
+
+---
+
+# PHẦN IV: BỘ 10 CÂU HỎI & TRẢ LỜI BẢO VỆ ĐỒ ÁN (HỎI - ĐÁP CHUYÊN SÂU)
+
+---
+
+### ❓ Câu 1: Em hãy giải thích cơ chế phân quyền Admin và Khách hàng trong hệ thống?
+👉 **Trả lời:** Em quản lý phân quyền qua bảng `vaitro` (Admin `mavaitro = 1`, Khách `mavaitro = 2`). Đăng nhập thành công mã hóa vai trò vào **JWT Token**. Mọi API Admin đều trải qua Middleware `kiemTraAdmin` ở Backend giải mã token, nếu `mavaitro !== 1` sẽ chặn lại trả về `403 Forbidden`.
+
+---
+
+### ❓ Câu 2: Tại sao em lại sử dụng Mã Serial Voucher độc nhất dạng `[VC-KH01-0001]`?
+👉 **Trả lời:** Em thiết kế cột `ma_serial` UNIQUE trong bảng `voucher_nguoidung` nhằm quản lý chính xác từng thẻ voucher, tuân thủ đúng kịch bản kiểm thử `TC-EX-02`. Khi đặt hàng thành công, hệ thống ghi đè `sudung = 1`, mã tự động biến mất khỏi dropdown.
+
+---
+
+### ❓ Câu 3: Làm thế nào để hệ thống đảm bảo số lượng tồn kho không bị âm khi có nhiều người đặt hàng cùng lúc?
+👉 **Trả lời:** Trong `order.controller.js`, em dùng **Database Transaction** kết hợp khóa dòng **`FOR UPDATE`**:
+`SELECT ... FROM luachon_sanpham WHERE maluachon = ? FOR UPDATE;`.
+Dòng dữ liệu bị khóa tạm thời. Nếu `soluongton < soLuong`, Backend `rollback()` hủy giao dịch báo lỗi "Không đủ kho", tránh hoàn toàn việc kho bị âm.
+
+---
+
+### ❓ Câu 4: Khi sản phẩm giảm giá %, hệ thống tính tiền Hóa đơn điện tử như thế nào?
+👉 **Trả lời:** Trong `order.controller.js`, em lấy `const donGia = item.dongia` (đơn giá đã trừ % khuyến mãi truyền từ giỏ hàng). Nên Chi tiết đơn hàng, Hóa đơn và Tổng tiền cuối cùng đều khớp 100% với giá sale.
+
+---
+
+### ❓ Câu 5: Cơ chế gửi Email tự động sau khi đặt hàng hoạt động ra sao?
+👉 **Trả lời:** Sau khi `commit()` đơn hàng thành công, Backend tự động gọi `sendOrderConfirmationEmail()` trong `server/utils/email.js`. Nodemailer mở kết nối **Gmail SMTP Cổng 465 SSL** gửi thư HTML chứa chi tiết đơn hàng đến mail khách chỉ trong 1 - 2 giây.
+
+---
+
+### ❓ Câu 6: Khi Admin bấm "Xác nhận đã nhận hàng trả", hệ thống xử lý hoàn kho ở đâu?
+👉 **Trả lời:** Nằm ở file `return.controller.js` hàm `confirmReceived()` (Dòng 94-145). Backend đọc sản phẩm bị trả và chạy 3 câu SQL `UPDATE` cộng hoàn lại tồn kho cho cả 3 bảng (`tonkho`, `sanpham`, `luachon_sanpham`).
+
+---
+
+### ❓ Câu 7: Vì sao em lại gỡ bỏ các chữ màu hồng `tag-khuyen-mai` trên thẻ sản phẩm?
+👉 **Trả lời:** Nghiệp vụ thực tế chỉ hiển thị nhãn giảm giá khi sản phẩm nằm trong chiến dịch Siêu Sale có hiệu lực. Em dọn dẹp các chữ màu hồng rác trong `ProductList.js` để giao diện chuẩn thẩm mỹ, chuyên nghiệp và chuẩn dữ liệu Database.
+
+---
+
+### ❓ Câu 8: Chức năng Thanh toán QR Code làm ở đâu và hoạt động ra sao?
+👉 **Trả lời:** 
+- **Mã QR:** Viết tại `ThanhToanQR.js` (Dòng 36-44) nhúng **VietQR API** tự động chèn STK, Tên TK, Số tiền và Nội dung `HONGXINH DH<Mã_Đơn>`.
+- **Giả lập Demo:** Nút "Giả lập: Khách đã quét QR" (Dòng 80-90) gửi `isDemo: true` lên Backend `order.controller.js` (Dòng 147) tự tạo mã giao dịch `QR<TIMESTAMP>` và ghi nhận `dathanhtoan` trong bảng `thanhtoan`.
+
+---
+
+### ❓ Câu 9: Chức năng Thống kê doanh thu tính làm sao và lượt truy cập lấy từ đâu?
+👉 **Trả lời:** 
+- **Doanh thu:** Viết ở `stats.controller.js` (Dòng 14-48) dùng SQL `SELECT SUM(tongtien) FROM donhang WHERE trangthaidonhang = 'hoanthanh'` (chỉ tính đơn hoàn thành thực tế).
+- **Lượt truy cập:** Dùng Middleware `trackVisitor` đếm lượt xem ngầm trong RAM (`globalVisitorCount++`) giúp hiển thị live traffic cho Admin mà không làm nặng DB.
+
+---
+
+### ❓ Câu 10: Điểm mạnh kỹ thuật lớn nhất của đồ án này là gì?
+👉 **Trả lời:** 
+1. **Kiến trúc RESTful API chuẩn hóa:** Tách biệt ReactJS Frontend và Node.js Express Backend.
+2. **Database Cloud TiDB MySQL 8.0:** Khả năng mở rộng, lưu trữ cloud mượt mà.
+3. **Giao dịch an toàn (ACID Transactions & FOR UPDATE Locking):** Không nghẽn kho, không âm kho, không trùng voucher.
+4. **Tích hợp Email SMTP SSL 465 tự động:** Xác nhận đơn hàng trực tiếp tới hòm thư người dùng.
