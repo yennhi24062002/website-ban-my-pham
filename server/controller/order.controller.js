@@ -140,15 +140,28 @@ const OrderController = {
       const trangthaiThanhToan = (phuongthuc !== "tienmat" && isDemo) ? "dathanhtoan" : "chuathanhtoan";
       const magiaodich = (phuongthuc !== "tienmat" && isDemo) ? taoMaGiaoDich(phuongthuc) : null;
 
-      const [orderResult] = await conn.query(
-        `INSERT INTO donhang (
-          manguoidung, tennguoinhan, sodienthoainhan, diachigiaohang,
-          tongtien, trangthaidonhang, trangthaithanhtoan, ghichu
-        ) VALUES (?, ?, ?, ?, 0, 'choxacnhan', ?, ?)`,
-        [manguoidung, tennguoinhan, sodienthoainhan, diachigiaohang, trangthaiThanhToan, ghichu || null]
-      );
+      const coCotGhichu = await coCot(conn, "donhang", "ghichu");
+      let orderResult;
+      if (coCotGhichu) {
+        [orderResult] = await conn.query(
+          `INSERT INTO donhang (
+            manguoidung, tennguoinhan, sodienthoainhan, diachigiaohang,
+            tongtien, trangthaidonhang, trangthaithanhtoan, ghichu
+          ) VALUES (?, ?, ?, ?, 0, 'choxacnhan', ?, ?)`,
+          [manguoidung, tennguoinhan, sodienthoainhan, diachigiaohang, trangthaiThanhToan, ghichu || null]
+        );
+      } else {
+        [orderResult] = await conn.query(
+          `INSERT INTO donhang (
+            manguoidung, tennguoinhan, sodienthoainhan, diachigiaohang,
+            tongtien, trangthaidonhang, trangthaithanhtoan
+          ) VALUES (?, ?, ?, ?, 0, 'choxacnhan', ?)`,
+          [manguoidung, tennguoinhan, sodienthoainhan, diachigiaohang, trangthaiThanhToan]
+        );
+      }
 
       const madonhang = orderResult.insertId;
+
       let tongtien = 0;
 
       for (const item of items) {

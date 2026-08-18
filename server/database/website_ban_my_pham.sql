@@ -123,6 +123,7 @@ CREATE TABLE donhang (
     tongtien DECIMAL(12,2) NOT NULL DEFAULT 0,
     trangthaidonhang VARCHAR(30) DEFAULT 'choxacnhan',
     trangthaithanhtoan VARCHAR(30) DEFAULT 'chuathanhtoan',
+    ghichu TEXT NULL,
     lydo_huy VARCHAR(500) DEFAULT NULL,
     ngaydat DATETIME DEFAULT CURRENT_TIMESTAMP,
     CONSTRAINT fk_donhang_nguoidung FOREIGN KEY (manguoidung) REFERENCES nguoidung(manguoidung)
