@@ -8,7 +8,7 @@
 
 ## 💡 HƯỚNG DẪN DÙNG TÀI LIỆU MASTER DUY NHẤT
 
-Đây là **TÀI LIỆU MASTER DUY NHẤT** tổng hợp 100% toàn bộ kiến thức nghiệp vụ, luồng chạy code, vị trí file, dòng code, bảng CSDL và bộ câu hỏi bảo vệ đồ án. Tài liệu được trình bày cực kỳ gọn gàng, sạch đẹp, không tràn màn hình trong VS Code.
+Đây là **TÀI LIỆU MASTER DUY NHẤT** tổng hợp 100% toàn bộ kiến thức nghiệp vụ, luồng chạy code từng bước bằng lời (từ đâu qua đâu), vị trí file, dòng code, bảng CSDL và bộ câu hỏi bảo vệ đồ án. Tài liệu trình bày thuần văn bản vô cùng dễ đọc, không dùng sơ đồ mermaid mã code khó nhìn.
 
 ---
 
@@ -46,12 +46,15 @@
 ## 📌 CHỨC NĂNG 1: ĐĂNG KÝ VÀ ĐĂNG NHẬP TÀI KHOẢN (JWT & Bcrypt)
 
 - **Nghiệp vụ:** Cho phép người dùng tạo tài khoản khách hàng để mua hàng. Mật khẩu được mã hóa băm bằng `bcryptjs`. Đăng nhập thành công trả về **JWT Token** lưu tại `localStorage`.
-- **Luồng A-Z:** 
-  1. Khách bấm "Đăng nhập" trên Header ➔ Mở Modal `LoginForm.js`.
-  2. Khách nhập Email & Mật khẩu ➔ Bấm "Xác nhận".
-  3. React gọi `axios.post('/api/auth/login', { email, matkhau })`.
-  4. Backend xử lý tại `server/controller/auth.controller.js`: SQL `SELECT * FROM nguoidung WHERE email = ?`.
-  5. Dùng `bcrypt.compare()` kiểm tra mật khẩu ➔ Tạo Token `jwt.sign()` trả về Client.
+- **Luồng chạy từng bước bằng lời (Từ đâu qua đâu):**
+  1. Khách bấm nút **"Đăng nhập"** trên thanh Header ➔ Mở cửa sổ Modal `LoginForm.js`.
+  2. Khách nhập Email & Mật khẩu ➔ Bấm nút **"Xác nhận"**.
+  3. React gửi dữ liệu qua lệnh `axios.post('/api/auth/login', { email, matkhau })`.
+  4. Backend tiếp nhận tại Route `/api/auth/login` ➔ Gọi hàm `login` trong `server/controller/auth.controller.js`.
+  5. Backend thực thi câu lệnh SQL: `SELECT * FROM nguoidung WHERE email = ?`.
+  6. Backend dùng `bcrypt.compare()` đối chiếu mật khẩu nhập với mật khẩu băm trong CSDL.
+  7. Mật khẩu đúng ➔ Tạo token `jwt.sign({ manguoidung, mavaitro }, SECRET_KEY)` ➔ Trả kết quả về cho React.
+  8. React lưu Token vào `localStorage` và cập nhật giao diện đã đăng nhập.
 - **File Code:** Frontend: `client/src/component/LoginForm.js` (Dòng 15-65) | Backend: `server/controller/auth.controller.js` (Dòng 25-90).
 
 ---
@@ -59,14 +62,22 @@
 ## 📌 CHỨC NĂNG 2: QUẢN LÝ HỒ SƠ CÁ NHÂN & ĐỔI MẬT KHẨU
 
 - **Nghiệp vụ:** Cập nhật Họ tên, Số điện thoại và Đổi mật khẩu. Mật khẩu mới được mã hóa lại bằng `bcrypt`.
-- **Luồng A-Z:** `CustomerArea.js` gọi `PUT /api/customers/:id` ➔ Backend `customer.controller.js` mã hóa `bcrypt.hash()` ➔ SQL `UPDATE nguoidung SET ...`.
+- **Luồng chạy từng bước bằng lời:**
+  1. Khách nhập thông tin mới tại màn hình `CustomerArea.js` ➔ Bấm "Lưu thay đổi".
+  2. React phát request `PUT /api/customers/:id`.
+  3. Backend `customer.controller.js` nhận dữ liệu ➔ Dùng `bcrypt.hash()` băm mật khẩu mới.
+  4. Chạy câu SQL `UPDATE nguoidung SET hoten=?, sodienthoai=?, matkhau=? WHERE manguoidung=?` ➔ Báo cập nhật thành công.
 
 ---
 
 ## 📌 CHỨC NĂNG 3: DANH SÁCH SẢN PHẨM & TÌM KIẾM TỨC THÌ (Search & Filter)
 
-- **Nghiệp vụ:** Hiển thị 16 sản phẩm mỹ phẩm kèm giá gốc, giá sau giảm và tiến trình số lượng đã bán. Tìm kiếm và lọc tức thì theo tên, loại da, danh mục không reload trang. Thẻ sản phẩm hiển thị gọn gàng, đã gỡ bỏ chữ màu hồng rác `tag-khuyen-mai`.
-- **Luồng A-Z:** `AppContext.js` gọi `GET /api/products` ➔ Backend `product.controller.js` chạy SQL JOIN liên bảng `sanpham`, `danhmuc`, `thuonghieu`, `tonkho`, `khuyenmai` ➔ Khách gõ từ khóa, hàm `useMemo` lọc ngay mảng state trong 0.01s.
+- **Nghiệp vụ:** Hiển thị 16 sản phẩm mỹ phẩm kèm giá gốc, giá sau giảm và số lượng đã bán. Tìm kiếm và lọc tức thì theo tên, loại da, danh mục mà không bị reload trang. Thẻ sản phẩm hiển thị gọn gàng, đã gỡ bỏ chữ màu hồng rác `tag-khuyen-mai`.
+- **Luồng chạy từng bước bằng lời:**
+  1. Trang web khởi chạy ➔ `AppContext.js` gọi API `GET /api/products`.
+  2. Backend `product.controller.js` chạy câu SQL JOIN 5 bảng: `sanpham`, `danhmuc`, `thuonghieu`, `tonkho`, `khuyenmai`.
+  3. Dữ liệu mảng sản phẩm trả về React ➔ Lưu vào State `sanPhams`.
+  4. Khách gõ chữ vào ô tìm kiếm ➔ Hàm `useMemo` tự động lọc mảng `sanPhams` và hiển thị kết quả ngay tức thì trong 0.01 giây.
 - **File Code:** Frontend: `client/src/component/ProductList.js` (Dòng 15-82), `client/src/store/AppContext.js` (Dòng 105-123) | Backend: `server/controller/product.controller.js` (Dòng 60-99).
 
 ---
@@ -74,7 +85,11 @@
 ## 📌 CHỨC NĂNG 4: CHI TIẾT SẢN PHẨM & CHỌN BIẾN THỂ MÀU SON
 
 - **Nghiệp vụ:** Xem công dụng, thành phần và chọn màu son riêng biệt (MAC: Ruby Woo, Russian Red, Diva; 3CE: Denim, Over Dose, Berry, Coral). Giá và tồn kho cập nhật động theo từng màu.
-- **Luồng A-Z:** Mở `/san-pham/:id` (`ProductDetail.js`) ➔ Backend chạy `SELECT * FROM luachon_sanpham WHERE masanpham = ?` ➔ Chọn nút màu ➔ Giao diện cập nhật tồn kho khả dụng của màu đó.
+- **Luồng chạy từng bước bằng lời:**
+  1. Khách bấm thẻ sản phẩm ➔ Chuyển hướng màn hình `/san-pham/:id` (`ProductDetail.js`).
+  2. React phát request `GET /api/products/:id` ➔ Backend chạy SQL `SELECT * FROM luachon_sanpham WHERE masanpham = ?`.
+  3. Danh sách màu hiển thị thành các nút bấm.
+  4. Khách bấm chọn nút màu "Russian Red" ➔ State `mauDaChon` cập nhật ➔ Màn hình hiển thị số lượng tồn kho và giá bán riêng của màu đó.
 - **File Code:** `client/src/component/ProductDetail.js` (Dòng 40-210), `client/src/constant/sanPham.js` (Dòng 280-318).
 
 ---
@@ -82,31 +97,72 @@
 ## 📌 CHỨC NĂNG 5: THÊM VÀO GIỎ HÀNG & ĐỒNG BỘ LOCALSTORAGE
 
 - **Nghiệp vụ:** Đưa sản phẩm kèm màu sắc vào giỏ. Tự động kiểm tra số lượng tồn kho. Lưu giỏ hàng vào `localStorage` giữ nguyên khi tắt trang.
-- **Luồng A-Z:** Bấm "Thêm vào giỏ" ➔ Gọi `themVaoGio()` trong `AppContext.js` (Dòng 160-210) ➔ Cập nhật State `gioHang` & `localStorage.setItem('cart', ...)`.
+- **Luồng chạy từng bước bằng lời:**
+  1. Khách bấm nút **"Thêm vào giỏ"** ➔ Kích hoạt hàm `themVaoGio()` trong `AppContext.js`.
+  2. Hàm đối chiếu số lượng khách chọn với số lượng tồn kho khả dụng ➔ Nếu quá số lượng kho thì bật thông báo cảnh báo.
+  3. Nếu đủ kho ➔ Thêm mặt hàng vào State `gioHang` ➔ Lưu mảng giỏ hàng vào `localStorage.setItem('cart', ...)`.
+  4. Badge số lượng trên icon Giỏ hàng ở Header tự động nhảy số.
 
 ---
 
 ## 📌 CHỨC NĂNG 6: SỔ ĐỊA CHỈ GIAO HÀNG & ĐẶT MẶC ĐỊNH
 
 - **Nghiệp vụ:** Lưu nhiều địa chỉ nhận hàng, chọn 1 địa chỉ Mặc định (`macdinh = 1`). Khi đặt hàng, hệ thống tự điền sẵn địa chỉ mặc định.
-- **File Code:** `client/src/page/CustomerArea.js` (Dòng 66-85), `server/controller/customer.controller.js`.
+- **Luồng chạy từng bước bằng lời:**
+  1. Khi mở khung đặt hàng ➔ React gọi API `GET /api/customers/:id`.
+  2. Backend đọc danh sách địa chỉ từ bảng `diachi`.
+  3. React tìm địa chỉ nào có `macdinh = 1` ➔ Tự động gán Họ tên, SĐT và Địa chỉ chi tiết vào Form đặt hàng.
 
 ---
 
 ## 📌 CHỨC NĂNG 7: ĐẶT HÀNG, TÍNH GIÁ GIẢM & TRỪ TỒN KHO 3 BẢNG (CỐT LÕI)
 
-- **Nghiệp vụ:** Khách nhập thông tin, chọn mã **Voucher Serial** và thanh toán. 
+- **Nghiệp vụ:** Khách nhập thông tin, chọn mã **Voucher Serial** và thanh toán.
   - **Tính đúng giá giảm %:** Hóa đơn lưu đúng giá đã trừ giảm giá (`item.dongia`).
   - **Trừ kho tự động 3 bảng:** Số lượng tồn bị trừ tức thì ở `luachon_sanpham`, `tonkho`, và `sanpham`.
-- **Luồng A-Z:**
-  1. Bấm "Xác nhận đặt hàng" (`CustomerArea.js`) ➔ POST `/api/orders`.
-  2. Backend mở Transaction: `await conn.beginTransaction()`.
-  3. Khóa dòng dữ liệu chống âm kho: `SELECT ... FOR UPDATE`.
-  4. Lấy đơn giá đã giảm % `const donGia = item.dongia` ➔ `INSERT INTO chitietdonhang`.
-  5. Trừ tồn kho 3 bảng: `UPDATE luachon_sanpham ...`, `UPDATE tonkho ...`, `UPDATE sanpham ...`.
-  6. Đánh dấu Voucher Serial đã dùng: `UPDATE voucher_nguoidung SET sudung = 1`.
-  7. `await conn.commit()` ➔ Tự động kích hoạt gửi Email xác nhận qua Gmail SSL 465.
+- **Luồng chạy từng bước bằng lời:**
+  1. Khách bấm nút **"Xác nhận đặt hàng"** tại `CustomerArea.js` ➔ Phát request POST `/api/orders`.
+  2. Backend nhận request ➔ Mở Database Transaction: `await conn.beginTransaction()`.
+  3. Backend thực thi lệnh khóa dòng dữ liệu chống âm kho: `SELECT ... FROM luachon_sanpham WHERE maluachon = ? FOR UPDATE`.
+  4. Backend lấy đơn giá đã giảm % `const donGia = item.dongia` ➔ Chèn dữ liệu vào bảng `chitietdonhang`.
+  5. Trừ tồn kho đồng thời cả 3 bảng:
+     - `UPDATE luachon_sanpham SET soluongton = soluongton - ?`
+     - `UPDATE tonkho SET soluongton = soluongton - ?`
+     - `UPDATE sanpham SET soluongton = soluongton - ?`
+  6. Đánh dấu Voucher Serial đã được sử dụng: `UPDATE voucher_nguoidung SET sudung = 1 WHERE mavoucher_nd = ?`.
+  7. Backend chốt giao dịch `await conn.commit()` ➔ Tự động kích hoạt hàm gửi Email xác nhận qua cổng Gmail SSL 465.
 - **File Code:** Frontend: `client/src/page/CustomerArea.js` (Dòng 150-240) | Backend: `server/controller/order.controller.js` (Dòng 111-330).
+
+---
+
+### 🔄 LUỒNG XỬ LÝ CHI TIẾT: KỊCH BẢN 2 KHÁCH HÀNG ĐẶT CÙNG LÚC (TRANSACTION & FOR UPDATE)
+
+Giả sử trong kho chỉ còn đúng **1 sản phẩm cuối cùng**, Khách hàng A và Khách hàng B cùng bấm **"Xác nhận đặt hàng"** chênh lệch nhau chỉ 0.001 giây:
+
+1. **Khách hàng A bấm Đặt hàng (Đến trước 1/1000 giây):**
+   - React gửi POST `/api/orders` ➔ Backend `order.controller.js` nhận yêu cầu của Khách A.
+   - Backend mở Giao dịch: `BEGIN TRANSACTION`.
+   - Backend chạy câu lệnh SQL khóa dòng độc quyền: `SELECT * FROM luachon_sanpham WHERE maluachon = 1 FOR UPDATE;`.
+   - Database TiDB/MySQL cấp quyền truy cập cho Khách A và **KHOÁ ĐÒNG DỮ LIỆU LẠI (EXCLUSIVE LOCK)**. Lúc này, bất kỳ ai khác đụng vào dòng này đều phải xếp hàng chờ.
+
+2. **Khách hàng B bấm Đặt hàng (Đến sau 1/1000 giây):**
+   - React gửi POST `/api/orders` ➔ Backend nhận yêu cầu của Khách B.
+   - Backend Khách B chạy câu lệnh SQL `SELECT ... FOR UPDATE`.
+   - Vì dòng sản phẩm đã bị Khách A khóa, Database buộc Khách B **phải tạm dừng chờ đợi (WAIT)** cho đến khi Khách A làm xong.
+
+3. **Backend xử lý xong đơn cho Khách hàng A:**
+   - Trả về số lượng kho hiện tại = 1 (đủ hàng).
+   - Trừ số lượng tồn kho về 0: `UPDATE luachon_sanpham SET soluongton = 0 WHERE maluachon = 1`.
+   - Tạo đơn hàng thành công và Hoàn tất giao dịch: `COMMIT TRANSACTION`.
+   - **Database lập tức GIẢI PHÓNG KHÓA DÒNG**.
+
+4. **Database chuyển lượt cho Khách hàng B:**
+   - Khách B lúc này mới được phép tiếp cận dòng sản phẩm.
+   - Backend Khách B đọc số lượng tồn kho mới trong Database ➔ Kết quả trả về = 0.
+   - Backend phát hiện tồn kho = 0 < số lượng muốn mua ➔ Lập tức **HỦY GIAO DỊCH (`ROLLBACK TRANSACTION`)** và báo lỗi.
+   - Trả về phản hồi cho Khách B: *"Sản phẩm đã hết hàng trong kho, vui lòng chọn sản phẩm khác!"*.
+
+👉 **Kết luận:** Tồn kho cuối cùng bằng 0, không bao giờ bị âm, Khách A mua thành công, Khách B nhận thông báo hết hàng chuẩn xác 100%!
 
 ---
 
@@ -114,6 +170,11 @@
 
 - **Nghiệp vụ:** Khách chọn phương thức **"QR Code"** ➔ Tự tạo mã QR động VietQR chèn STK shop `1017833075` (Vietcombank), Tên chủ TK `PHAM YEN NHI`, Số tiền chính xác và Nội dung `HONGXINH DH<Mã_Đơn>`.
 - **Chế độ Giả lập Demo:** Cung cấp nút **"Giả lập: Khách đã quét QR & chuyển tiền"** gửi flag `isDemo: true` giúp sinh mã giao dịch `QR<TIMESTAMP><RANDOM>` và đánh dấu trạng thái `dathanhtoan` để tiện demo chấm bài.
+- **Luồng chạy từng bước bằng lời:**
+  1. Khách chọn thanh toán QR ➔ Component `ThanhToanQR.js` hiển thị mã QR động lấy từ link VietQR API (`https://img.vietqr.io/image/VCB-1017833075-compact2.png...`).
+  2. Bấm nút **"Giả lập: Khách đã quét QR"** ➔ React truyền flag `isDemo: true` vào body request gửi lên API `/api/orders`.
+  3. Backend `order.controller.js` kiểm tra `isDemo === true` ➔ Đặt `trangthaithanhtoan = "dathanhtoan"`.
+  4. Backend tự sinh mã giao dịch `QR1787045867960` ➔ Lưu vào bảng `thanhtoan`.
 - **File Code:** Frontend: `client/src/component/ThanhToanQR.js` (Dòng 36-44 ảnh QR, Dòng 80-90 nút Demo) | Backend: `server/controller/order.controller.js` (Dòng 147, 299-304).
 
 ---
@@ -128,6 +189,11 @@
 ## 📌 CHỨC NĂNG 10: MÃ SERIAL VOUCHER ĐỘC NHẤT (`[VC-KH01-0001]`)
 
 - **Nghiệp vụ:** Mỗi voucher cấp cho khách có mã Serial riêng dạng `[VC-KH01-0001]`. Đảm bảo kịch bản kiểm thử `TC-EX-02`: Mỗi thẻ chỉ dùng đúng 1 lần duy nhất, khi dùng xong mã tự biến mất khỏi dropdown.
+- **Luồng chạy từng bước bằng lời:**
+  1. Khi mở khung đặt hàng ➔ React gọi `GET /api/vouchers/user/1`.
+  2. Backend lọc bảng `voucher_nguoidung` lấy các voucher của khách có `sudung = 0`.
+  3. Dropdown hiển thị rõ mã Serial `[VC-KH01-0001] - Giảm 50.000đ`.
+  4. Sau khi đặt hàng thành công ➔ Backend cập nhật `UPDATE voucher_nguoidung SET sudung = 1` ➔ Mã biến mất khỏi dropdown.
 - **File Code:** Frontend: `client/src/page/CustomerArea.js` (Dòng 473-501) | Backend: `server/controller/voucher.controller.js` (Dòng 5-60), `server/controller/order.controller.js` (Dòng 274-290).
 
 ---
@@ -135,6 +201,11 @@
 ## 📌 CHỨC NĂNG 11: GỬI EMAIL XÁC NHẬN ĐƠN HÀNG TỰ ĐỘNG (Gmail SSL 465)
 
 - **Nghiệp vụ:** Sau khi commit đơn thành công, hệ thống tự động soạn Email HTML chứa chi tiết đơn hàng và gửi thẳng đến hòm thư người mua qua cổng **Gmail SMTP 465 SSL** (`smtp.gmail.com:465`).
+- **Luồng chạy từng bước bằng lời:**
+  1. Đơn hàng commit xong vào CSDL ➔ Backend trích xuất Email người nhận.
+  2. Backend gọi hàm `sendOrderConfirmationEmail()` trong `server/utils/email.js`.
+  3. Thư viện Nodemailer mở kết nối SSL Cổng 465 tới `smtp.gmail.com`.
+  4. Gửi email HTML chứa danh sách món đồ và tổng tiền đến Inbox người mua trong 1-2 giây.
 - **File Code:** `server/utils/email.js` (Dòng 5-160).
 
 ---
@@ -142,6 +213,10 @@
 ## 📌 CHỨC NĂNG 12: XEM & IN HÓA ĐƠN ĐIỆN TỬ CHUẨN UNICODE
 
 - **Nghiệp vụ:** Cho phép xem Modal Hóa đơn điện tử sang trọng và bấm nút **"In hóa đơn"** in trực tiếp ra giấy qua cửa sổ trình duyệt chuẩn tiếng Việt Unicode không bị lỗi font.
+- **Luồng chạy từng bước bằng lời:**
+  1. Khách bấm nút "Xem hóa đơn" tại đơn hàng ➔ React gọi `GET /api/orders/:id/invoice`.
+  2. Modal `ModalXemHoaDon.js` hiển thị chi tiết hóa đơn.
+  3. Bấm nút "In hóa đơn" ➔ React mở cửa sổ `window.print()` chứa định dạng in chuyên nghiệp.
 - **File Code:** `client/src/page/CustomerArea.js` (Dòng 164-260), `server/controller/order.controller.js` (Dòng 80-108).
 
 ---
@@ -156,6 +231,11 @@
 ## 📌 CHỨC NĂNG 14: YÊU CẦU TRẢ HÀNG & HOÀN KHO KHI NHẬN HÀNG
 
 - **Nghiệp vụ:** Đơn hoàn thành được quyền yêu cầu trả hàng. Khi Admin nhận được hàng và bấm **"Đã nhận hàng trả"**, hệ thống **TỰ ĐỘNG CỘNG HOÀN LẠI SỐ LƯỢNG KHO VỀ CẢ 3 BẢNG** (`tonkho`, `sanpham`, `luachon_sanpham`).
+- **Luồng chạy từng bước bằng lời:**
+  1. Khách bấm "Yêu cầu trả hàng" ➔ POST `/api/returns` ➔ Lưu dòng trạng thái `choxuly`.
+  2. Admin bấm "Duyệt" ➔ Chuyển trạng thái sang `duyet_chohanghoi`.
+  3. Khi nhận được hàng trả về kho, Admin bấm "Xác nhận đã nhận hàng" ➔ PUT `/api/returns/:id/confirm-received`.
+  4. Backend chạy 3 câu SQL `UPDATE` cộng hoàn lại số lượng tồn kho cho cả 3 bảng `tonkho`, `sanpham` và `luachon_sanpham`.
 - **File Code:** `client/src/page/CustomerArea.js` (Dòng 260-310), `server/controller/return.controller.js` (Dòng 94-145).
 
 ---
@@ -169,7 +249,7 @@
 
 ## 📌 CHỨC NĂNG 16: THỐNG KÊ DOANH THU & LƯỢT TRUY CẬP RAM (Admin Dashboard)
 
-- **Nghiệp vụ:** Hiển thị 5 thẻ KPI: Tổng sản phẩm, Tổng khách hàng, Tổng đơn hàng, Tổng doanh thu (`WHERE trangthaidonhang = 'hoanthanh'`) và Số lượt truy cập thời gian thực lưu ngầm trong RAM (`globalVisitorCount++`).
+- **Nghiệp vụ:** Hiển thị 5 thẻ KPI: Tổng sản phẩm, Tổng khách hàng, Tổng đơn hàng, Tổng doanh thu (`WHERE trangthaidonhang = 'hoanthanh'`) và Số lượt truy cập ngầm thời gian thực lưu trong RAM (`globalVisitorCount++`).
 - **File Code:** `client/src/component/admin/Dashboard.js` (Dòng 10-120), `server/controller/stats.controller.js` (Dòng 14-48).
 
 ---
@@ -247,7 +327,7 @@
 ### ❓ Câu 3: Làm thế nào để hệ thống đảm bảo số lượng tồn kho không bị âm khi có nhiều người đặt hàng cùng lúc?
 👉 **Trả lời:** Trong `order.controller.js`, em dùng **Database Transaction** kết hợp khóa dòng **`FOR UPDATE`**:
 `SELECT ... FROM luachon_sanpham WHERE maluachon = ? FOR UPDATE;`.
-Dòng dữ liệu bị khóa tạm thời. Nếu `soluongton < soLuong`, Backend `rollback()` hủy giao dịch báo lỗi "Không đủ kho", tránh hoàn toàn việc kho bị âm.
+Dòng dữ liệu bị khóa tạm thời cho Khách A. Nếu Khách B đến sau, Database ép Khách B chờ. Khi Khách A mua xong làm tồn kho = 0, Khách B mới vào đọc kho = 0 ➔ Backend `rollback()` hủy đơn Khách B và báo "Hết hàng", tránh hoàn toàn việc kho bị âm.
 
 ---
 
