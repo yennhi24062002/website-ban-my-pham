@@ -1,17 +1,11 @@
 const mysql = require("mysql2/promise");
 require("dotenv").config();
 
-const dbHost = (process.env.DB_HOST || "localhost").trim();
-const dbUser = (process.env.DB_USER || "root").trim();
-const dbPassword = (process.env.DB_PASSWORD || "").trim();
-let dbName = (process.env.DB_NAME || "website_ban_my_pham").trim();
-const dbPort = parseInt((process.env.DB_PORT || "3306").trim());
-
-const isSSL = process.env.DB_SSL === "true" || dbHost.includes("tidbcloud.com") || dbHost.includes("aivencloud.com");
-
-if (dbHost.includes("tidbcloud.com") || !dbName || dbName === "sys" || dbName.includes("if0_") || dbName.includes("sql")) {
-  dbName = "website_ban_my_pham";
-}
+const dbHost = (process.env.DB_HOST || "gateway01.ap-southeast-1.prod.aws.tidbcloud.com").trim();
+const dbUser = (process.env.DB_USER || "MnEmxApLYZrnqQq.root").trim();
+const dbPassword = (process.env.DB_PASSWORD || "N8qrFKganU510LcW").trim();
+const dbPort = parseInt((process.env.DB_PORT || "4000").trim());
+const dbName = "website_ban_my_pham";
 
 const poolConfig = {
   host: dbHost,
@@ -23,15 +17,12 @@ const poolConfig = {
   connectionLimit: 10,
   queueLimit: 0,
   decimalNumbers: true,
-  connectTimeout: 20000
-};
-
-if (isSSL) {
-  poolConfig.ssl = {
+  connectTimeout: 20000,
+  ssl: {
     minVersion: 'TLSv1.2',
     rejectUnauthorized: false
-  };
-}
+  }
+};
 
 const pool = mysql.createPool(poolConfig);
 

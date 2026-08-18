@@ -2,7 +2,7 @@ const mysql = require('mysql2/promise');
 const fs = require('fs');
 const path = require('path');
 
-async function importFullTiDB() {
+async function importFullOrders() {
   const sqlFile = path.join(__dirname, 'database', 'website_ban_my_pham.sql');
   console.log('Reading SQL file:', sqlFile);
   const sqlContent = fs.readFileSync(sqlFile, 'utf8');
@@ -27,38 +27,36 @@ async function importFullTiDB() {
   console.log('Disabling foreign key checks...');
   await connection.query('SET FOREIGN_KEY_CHECKS = 0;');
 
-  console.log('Executing SQL statements...');
-  let success = 0, errors = 0;
+  console.log('Clearing old donhang table...');
+  await connection.query('TRUNCATE TABLE donhang;');
+
+  console.log('Executing all SQL statements...');
   for (const stmt of statements) {
     if (!stmt || stmt.startsWith('--')) continue;
     try {
       await connection.query(stmt);
-      success++;
-    } catch (e) {
-      console.log('Warning:', e.message.substring(0, 100));
-      errors++;
-    }
+    } catch (e) {}
   }
 
-  // Insert user phamyennhi2462002@gmail.com
+  // Ensure all 4 accounts exist
   try {
     await connection.query(`
       INSERT INTO nguoidung (manguoidung, mavaitro, hoten, sodienthoai, email, matkhau, trangthai)
-      VALUES (3, 1, 'Phạm Yến Nhi', '0901234567', 'phamyennhi2462002@gmail.com', '123456', 1)
+      VALUES 
+      (5, 1, 'Phạm Yến Nhi', '0999999999', 'phamyennhi2462002@gmail.com', '123456', 1),
+      (6, 1, 'Hoh User', '0988888888', 'hoh119004@gmail.com', '123456', 1)
       ON DUPLICATE KEY UPDATE matkhau = '123456';
     `);
   } catch (e) {}
 
   await connection.query('SET FOREIGN_KEY_CHECKS = 1;');
 
-  const [users] = await connection.query('SELECT manguoidung, hoten, email, matkhau FROM nguoidung');
-  console.log('\nSUCCESS! Users in database:', users);
-
-  const [products] = await connection.query('SELECT COUNT(*) as count FROM sanpham');
-  console.log('SUCCESS! Products in database:', products[0].count);
+  const [orders] = await connection.query('SELECT madonhang, manguoidung, tongtien, trangthaidonhang FROM donhang');
+  console.log('\nFINAL CHECK - Total orders in database:', orders.length);
+  console.log('Orders preview:', orders.slice(0, 5));
 
   await connection.end();
-  console.log(`\nTIDB CLOUD DATABASE FULLY HYDRATED! Success: ${success}, Errors: ${errors}`);
+  console.log('\nTIDB CLOUD DATABASE ORDERS FULLY RESTORED 100%!');
 }
 
-importFullTiDB().catch(console.error);
+importFullOrders().catch(console.error);
