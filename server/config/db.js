@@ -1,15 +1,20 @@
 const mysql = require("mysql2/promise");
 require("dotenv").config();
 
-const dbHost = process.env.DB_HOST || "localhost";
+const dbHost = (process.env.DB_HOST || "localhost").trim();
+const dbUser = (process.env.DB_USER || "root").trim();
+const dbPassword = (process.env.DB_PASSWORD || "").trim();
+const dbName = (process.env.DB_NAME || "website_ban_my_pham").trim();
+const dbPort = parseInt((process.env.DB_PORT || "3306").trim());
+
 const isSSL = process.env.DB_SSL === "true" || dbHost.includes("tidbcloud.com") || dbHost.includes("aivencloud.com");
 
 const poolConfig = {
   host: dbHost,
-  user: process.env.DB_USER || "root",
-  password: process.env.DB_PASSWORD || "",
-  database: process.env.DB_NAME || "website_ban_my_pham",
-  port: parseInt(process.env.DB_PORT || "3306"),
+  user: dbUser,
+  password: dbPassword,
+  database: dbName,
+  port: dbPort,
   waitForConnections: true,
   connectionLimit: 10,
   queueLimit: 0,
