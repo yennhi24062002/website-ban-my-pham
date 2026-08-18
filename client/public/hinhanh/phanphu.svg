@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="400" height="300" viewBox="0 0 400 300">
+  <rect width="400" height="300" fill="#fce7ff"/>
+  <circle cx="200" cy="154" r="82" fill="#e75493"/>
+  <circle cx="200" cy="154" r="58" fill="#ffd6e8"/>
+  <rect x="145" y="222" width="110" height="16" rx="8" fill="#b83270"/>
+  <text x="200" y="162" font-family="Arial" font-size="18" text-anchor="middle" fill="#b83270">POWDER</text>
+</svg>

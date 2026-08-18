@@ -1,0 +1,11 @@
+{
+  "name": "website-ban-my-pham-full",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "client": "cd client && npm start",
+    "server": "cd server && npm run dev",
+    "db:reset": "cd server && npm run db:reset",
+    "db:migrate": "cd server && npm run db:migrate"
+  }
+}

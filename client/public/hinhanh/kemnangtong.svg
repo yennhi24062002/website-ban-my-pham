@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="400" height="300" viewBox="0 0 400 300">
+  <rect width="400" height="300" fill="#fff1dc"/>
+  <rect x="135" y="76" width="130" height="160" rx="18" fill="#ffffff"/>
+  <rect x="135" y="76" width="130" height="48" rx="18" fill="#ff9ebd"/>
+  <text x="200" y="160" font-family="Arial" font-size="18" text-anchor="middle" fill="#b83270">TONE UP</text>
+  <text x="200" y="186" font-family="Arial" font-size="16" text-anchor="middle" fill="#777">SPF 50</text>
+  <circle cx="306" cy="86" r="28" fill="#ffc857"/>
+</svg>

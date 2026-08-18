@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="400" height="300" viewBox="0 0 400 300">
+  <rect width="400" height="300" fill="#ffe4ef"/>
+  <rect x="165" y="80" width="70" height="140" rx="16" fill="#e75493"/>
+  <rect x="178" y="55" width="44" height="35" rx="8" fill="#b83270"/>
+  <rect x="152" y="105" width="96" height="64" rx="10" fill="#fff"/>
+  <text x="200" y="143" font-family="Arial" font-size="20" text-anchor="middle" fill="#b83270">SERUM</text>
+  <circle cx="92" cy="78" r="22" fill="#f7a7c8"/>
+  <circle cx="306" cy="220" r="28" fill="#f7a7c8"/>
+</svg>

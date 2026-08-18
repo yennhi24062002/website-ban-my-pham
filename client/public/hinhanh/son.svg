@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="400" height="300" viewBox="0 0 400 300">
+  <rect width="400" height="300" fill="#ffe4ef"/>
+  <rect x="145" y="122" width="55" height="105" rx="8" fill="#222"/>
+  <rect x="205" y="112" width="55" height="115" rx="8" fill="#e75493"/>
+  <path d="M145 122 L172 62 L200 122 Z" fill="#c21867"/>
+  <rect x="205" y="82" width="55" height="40" rx="8" fill="#f3bdd5"/>
+  <text x="200" y="255" font-family="Arial" font-size="22" text-anchor="middle" fill="#b83270">SON MÔI</text>
+</svg>

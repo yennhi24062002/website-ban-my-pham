@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="400" height="300" viewBox="0 0 400 300">
+  <rect width="400" height="300" fill="#e7f7f2"/>
+  <path d="M145 92 H255 L235 225 H165 Z" fill="#ffffff"/>
+  <rect x="160" y="70" width="80" height="28" rx="8" fill="#44b39d"/>
+  <rect x="165" y="132" width="70" height="52" rx="8" fill="#ffd6e8"/>
+  <text x="200" y="164" font-family="Arial" font-size="16" text-anchor="middle" fill="#b83270">CLEANSER</text>
+  <circle cx="95" cy="215" r="18" fill="#b7eadf"/>
+  <circle cx="315" cy="82" r="24" fill="#b7eadf"/>
+</svg>

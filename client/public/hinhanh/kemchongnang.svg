@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="400" height="300" viewBox="0 0 400 300">
+  <rect width="400" height="300" fill="#fff1dc"/>
+  <circle cx="93" cy="76" r="36" fill="#ffc857"/>
+  <rect x="145" y="75" width="110" height="155" rx="18" fill="#ffffff"/>
+  <rect x="145" y="75" width="110" height="45" rx="18" fill="#e75493"/>
+  <text x="200" y="157" font-family="Arial" font-size="18" text-anchor="middle" fill="#b83270">SPF 50</text>
+  <text x="200" y="184" font-family="Arial" font-size="16" text-anchor="middle" fill="#777">SUNSCREEN</text>
+  <circle cx="310" cy="218" r="26" fill="#ffd6e8"/>
+</svg>

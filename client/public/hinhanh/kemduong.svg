@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="400" height="300" viewBox="0 0 400 300">
+  <rect width="400" height="300" fill="#ffe4ef"/>
+  <ellipse cx="200" cy="196" rx="88" ry="34" fill="#b83270"/>
+  <rect x="120" y="125" width="160" height="78" rx="20" fill="#e75493"/>
+  <ellipse cx="200" cy="125" rx="80" ry="30" fill="#fff"/>
+  <text x="200" y="171" font-family="Arial" font-size="20" text-anchor="middle" fill="#fff">CREAM</text>
+  <circle cx="104" cy="76" r="20" fill="#f7a7c8"/>
+</svg>
