@@ -10,7 +10,7 @@ const KhuyenMaiController = {
       for (let km of rows) {
         const [spRows] = await db.query(
           `SELECT sp.masanpham, sp.tensanpham, sp.giaban 
-           FROM khuyenmai_sanpham ks 
+           FROM sanpham_khuyenmai ks 
            JOIN sanpham sp ON ks.masanpham = sp.masanpham 
            WHERE ks.makm = ?`,
           [km.makm]
@@ -41,8 +41,8 @@ const KhuyenMaiController = {
       if (sanphamIds && sanphamIds.length > 0) {
         for (const masp of sanphamIds) {
           await db.query(
-            "INSERT INTO khuyenmai_sanpham (makm, masanpham) VALUES (?, ?)",
-            [makm, masp]
+            "INSERT INTO sanpham_khuyenmai (masanpham, makm) VALUES (?, ?)",
+            [masp, makm]
           );
         }
       }

@@ -80,9 +80,9 @@ async function layDanhSachSanPham() {
      JOIN danhmuc dm ON dm.madanhmuc = p.madanhmuc
      LEFT JOIN thuonghieu th ON th.mathuonghieu = p.mathuonghieu
      LEFT JOIN tonkho tk ON tk.masanpham = p.masanpham
-     LEFT JOIN khuyenmai_sanpham ks ON p.masanpham = ks.masanpham
+     LEFT JOIN sanpham_khuyenmai ks ON p.masanpham = ks.masanpham
      LEFT JOIN khuyenmai k ON ks.makm = k.makm AND k.trangthai = 'dangchay' AND NOW() BETWEEN k.ngaybatdau AND k.ngayketthuc
-     ORDER BY p.masanpham DESC`
+     ORDER BY p.masanpham ASC`
   );
 
   let variantRows = [];
@@ -131,7 +131,7 @@ const ProductController = {
          JOIN danhmuc dm ON dm.madanhmuc = p.madanhmuc
          LEFT JOIN thuonghieu th ON th.mathuonghieu = p.mathuonghieu
          LEFT JOIN tonkho tk ON tk.masanpham = p.masanpham
-         LEFT JOIN khuyenmai_sanpham ks ON p.masanpham = ks.masanpham
+         LEFT JOIN sanpham_khuyenmai ks ON p.masanpham = ks.masanpham
          LEFT JOIN khuyenmai k ON ks.makm = k.makm AND k.trangthai = 'dangchay' AND NOW() BETWEEN k.ngaybatdau AND k.ngayketthuc
          WHERE p.masanpham = ?`,
         [id]
