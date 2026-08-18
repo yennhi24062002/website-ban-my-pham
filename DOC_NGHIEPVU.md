@@ -80,12 +80,13 @@ Dưới đây là sơ đồ dòng chảy nghiệp vụ từ Khách hàng đến 
   2. *Chuyển khoản Banking thủ công:* Cung cấp STK và nội dung chuyển khoản.
   3. *Mã VietQR Ngân hàng động:* Tự động sinh mã QR chứa số tiền chính xác và nội dung `DH<Mã_đơn>`. Khách chỉ cần mở App ngân hàng bất kỳ quét mã là hoàn tất.
 
-### 5. Quy trình Kiểm soát Kho an toàn (SQL Transaction & Lock `FOR UPDATE`)
-- Để chống lỗi mua tranh hết hàng khi nhiều người cùng bấm mua 1 sản phẩm:
-  - Backend mở một giao tác CSDL (`conn.beginTransaction()`).
-  - Thực thi câu lệnh SQL `SELECT ... FOR UPDATE` để khóa độc quyền dòng dữ liệu của biến thể đó.
-  - Nếu `soluongton >= soluong_mua`, thực hiện trừ tồn kho (`UPDATE luachon_sanpham SET soluongton = soluongton - ?`), lưu đơn hàng và `conn.commit()`.
-  - Nếu `soluongton < soluong_mua`, ném lỗi, thực hiện `conn.rollback()` hủy toàn bộ đơn hàng và báo "Sản phẩm đã hết hàng".
+### 5. Quy trình Kiểm tra & Xử lý Tồn kho khi Đặt hàng
+- Khi Khách hàng nhấn nút **"Đặt hàng"**, hệ thống thực hiện kiểm tra tồn kho theo nguyên tắc vô cùng đơn giản và chặt chẽ:
+  - **Bước 1 (Kiểm tra tồn):** Server kiểm tra số lượng tồn kho của sản phẩm/biến thể trong CSDL.
+  - **Bước 2 (Xử lý trừ kho hoặc báo lỗi):**
+    - Nếu số lượng tồn kho đủ cho đơn hàng $\rightarrow$ Server trừ số lượng kho tương ứng, lưu đơn hàng và thông báo "Đặt hàng thành công".
+    - Nếu số lượng tồn kho không đủ (hoặc đã hết hàng) $\rightarrow$ Server tự động hủy đơn và thông báo "Sản phẩm đã hết hàng" cho khách.
+
 
 ### 6. Quy trình Duyệt Đơn hàng Đa bước & CronJob Tự động
 - **Duyệt đơn đa bước Admin:**
