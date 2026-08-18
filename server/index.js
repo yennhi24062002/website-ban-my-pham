@@ -63,3 +63,5 @@ app.listen(port, () => {
   console.log(`[CronJob] Auto-approve đơn sau 10p đã kích hoạt.`);
 });
 
+module.exports = app;
+
