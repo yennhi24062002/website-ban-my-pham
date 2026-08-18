@@ -4,30 +4,16 @@ function nhanDangSanPham(row, luachon = []) {
   let giaban_thucte = Number(row.giaban);
   let giagoc_hienthi = null;
 
-  if (row.makm) {
+  // Tinh gia sau khi ap dung khuyen mai (phantramgiam theo SQL goc)
+  if (row.makhuyenmai && Number(row.phantramgiam) > 0) {
     giagoc_hienthi = Number(row.giaban);
-    if (row.loai_giamgia === 'phan_tram') {
-      giaban_thucte = giagoc_hienthi * (1 - Number(row.mucgiam) / 100);
-    } else if (row.loai_giamgia === 'tien_mat') {
-      giaban_thucte = Math.max(0, giagoc_hienthi - Number(row.mucgiam));
-    }
+    giaban_thucte = Math.round(giagoc_hienthi * (1 - Number(row.phantramgiam) / 100));
 
-    luachon = luachon.map(lc => {
-      let lc_giaban = Number(lc.giaban);
-      let lc_giagoc = lc_giaban;
-
-      if (row.loai_giamgia === 'phan_tram') {
-        lc_giaban = lc_giagoc * (1 - Number(row.mucgiam) / 100);
-      } else if (row.loai_giamgia === 'tien_mat') {
-        lc_giaban = Math.max(0, lc_giagoc - Number(row.mucgiam));
-      }
-
-      return {
-        ...lc,
-        giaban: lc_giaban,
-        giagoc: lc_giagoc
-      };
-    });
+    luachon = luachon.map(lc => ({
+      ...lc,
+      giagoc: Number(lc.giaban),
+      giaban: Math.round(Number(lc.giaban) * (1 - Number(row.phantramgiam) / 100))
+    }));
   }
 
   return {
@@ -49,10 +35,9 @@ function nhanDangSanPham(row, luachon = []) {
     tendanhmuc: row.tendanhmuc,
     tenthuonghieu: row.tenthuonghieu,
     soluongton: row.soluongton ?? 0,
-    makm: row.makm || null,
-    tenkm: row.tenkm || "",
-    loai_giamgia: row.loai_giamgia || null,
-    mucgiam: row.mucgiam || null,
+    makhuyenmai: row.makhuyenmai || null,
+    tenkhuyenmai: row.tenkhuyenmai || "",
+    phantramgiam: row.phantramgiam || 0,
     luachon
   };
 }
@@ -75,13 +60,15 @@ function nhanDangLuachon(row) {
 async function layDanhSachSanPham() {
   const [sanPhamRows] = await db.query(
     `SELECT p.*, dm.tendanhmuc, th.tenthuonghieu, tk.soluongton,
-            k.makm, k.tenkm, k.loai_giamgia, k.mucgiam
+            k.makhuyenmai, k.tenkhuyenmai, k.phantramgiam
      FROM sanpham p
      JOIN danhmuc dm ON dm.madanhmuc = p.madanhmuc
      LEFT JOIN thuonghieu th ON th.mathuonghieu = p.mathuonghieu
      LEFT JOIN tonkho tk ON tk.masanpham = p.masanpham
      LEFT JOIN sanpham_khuyenmai ks ON p.masanpham = ks.masanpham
-     LEFT JOIN khuyenmai k ON ks.makm = k.makm AND k.trangthai = 'dangchay' AND NOW() BETWEEN k.ngaybatdau AND k.ngayketthuc
+     LEFT JOIN khuyenmai k ON ks.makhuyenmai = k.makhuyenmai
+       AND k.trangthai = 'hoatdong'
+       AND NOW() BETWEEN k.ngaybatdau AND k.ngayketthuc
      ORDER BY p.masanpham ASC`
   );
 
@@ -126,13 +113,15 @@ const ProductController = {
       const { id } = req.params;
       const [rows] = await db.query(
         `SELECT p.*, dm.tendanhmuc, th.tenthuonghieu, tk.soluongton,
-                k.makm, k.tenkm, k.loai_giamgia, k.mucgiam
+                k.makhuyenmai, k.tenkhuyenmai, k.phantramgiam
          FROM sanpham p
          JOIN danhmuc dm ON dm.madanhmuc = p.madanhmuc
          LEFT JOIN thuonghieu th ON th.mathuonghieu = p.mathuonghieu
          LEFT JOIN tonkho tk ON tk.masanpham = p.masanpham
          LEFT JOIN sanpham_khuyenmai ks ON p.masanpham = ks.masanpham
-         LEFT JOIN khuyenmai k ON ks.makm = k.makm AND k.trangthai = 'dangchay' AND NOW() BETWEEN k.ngaybatdau AND k.ngayketthuc
+         LEFT JOIN khuyenmai k ON ks.makhuyenmai = k.makhuyenmai
+           AND k.trangthai = 'hoatdong'
+           AND NOW() BETWEEN k.ngaybatdau AND k.ngayketthuc
          WHERE p.masanpham = ?`,
         [id]
       );
