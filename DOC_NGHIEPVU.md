@@ -190,3 +190,23 @@ Dưới đây là sơ đồ dòng chảy nghiệp vụ từ Khách hàng đến 
   > *"Dạ thưa Thầy/Cô, CSDL chính của hệ thống là **MySQL 8.0** với chuẩn thiết kế 21 bảng 3NF.*
   > *Khi đưa website lên đám mây Vercel, CSDL của em được lưu trữ trực tuyến 24/7 trên nền tảng **Cloud Database Serverless (TiDB Cloud - chuẩn MySQL 8.0)** kết nối bảo mật qua mã hóa SSL/TLS. Việc sử dụng CSDL Serverless trên đám mây giúp trang web phản hồi siêu tốc 0.1s, tự động mở rộng và hoàn toàn độc lập không cần phải bật máy tính hay localhost ạ!"*
 
+#### ❓ Câu 11: Thầy/Cô hỏi "Nếu em thêm, sửa hoặc xóa dữ liệu sản phẩm/đơn hàng trên Web Vercel thì CSDL bên TiDB Cloud có thay đổi theo không?"
+- **Đáp án chuẩn:**
+  > *"Dạ thưa Thầy/Cô, CÓ THAY ĐỔI THEO TỨC THÌ 100% ạ! Vì hệ thống Backend Serverless của em kết nối trực tiếp thời gian thực với TiDB Cloud qua kết nối TCP/SSL.*
+  > *Mọi thao tác Thêm/Sửa/Xóa của Admin hoặc Đặt đơn của Khách hàng trên Vercel đều tự động kích hoạt câu lệnh SQL (`INSERT`, `UPDATE`, `DELETE`) thực thi thẳng vào CSDL TiDB Cloud. Tất cả người dùng truy cập web từ bất kỳ thiết bị nào bấm F5 là thấy dữ liệu mới cập nhật đồng bộ ngay lập tức ạ!"*
+
+---
+
+## VII. BẢNG TỔNG HỢP CÁC FILE CODE ĐÃ CHỈNH SỬA & CẤU HÌNH DỰ ÁN (PROJECT CODE CHANGES LOG)
+
+Để giúp sinh viên nắm rõ toàn bộ các thay đổi kỹ thuật mã nguồn đã thực hiện trong dự án:
+
+| Tên File | Đường dẫn file | Nội dung đã được chỉnh sửa / nâng cấp |
+| :--- | :--- | :--- |
+| **`vercel.json`** | `website_ban_my_pham/vercel.json` | Cấu hình cho Vercel chạy Full-Stack: Route `/api/(.*)` về `server/index.js` (Node.js Serverless Function) và route `/(.*)` về React SPA static build. |
+| **`server/index.js`** | `website_ban_my_pham/server/index.js` | Thêm `module.exports = app;` giúp Vercel biên dịch Express Backend thành Serverless Function 24/7. |
+| **`server/config/db.js`** | `website_ban_my_pham/server/config/db.js` | Nâng cấp tự động bật kết nối mã hóa SSL/TLS (`minVersion: TLSv1.2`) tương thích 100% với TiDB Cloud Serverless MySQL. |
+| **`client/src/config/api.js`** | `website_ban_my_pham/client/src/config/api.js` | Đặt địa chỉ `API_BASE` mặc định là `/api` cho môi trường Vercel (loại bỏ hoàn toàn lỗi CORS và ngắt kết nối). |
+| **`client/src/index.css`** | `website_ban_my_pham/client/src/index.css` | Cập nhật `.hai-cot` thành `grid-template-columns: 1fr 1fr; max-width: 1250px; margin: 0 auto;` giúp khung Đặt hàng & Giỏ hàng chia 50/50 cân đối. |
+
+
