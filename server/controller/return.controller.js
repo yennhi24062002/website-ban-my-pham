@@ -104,7 +104,7 @@ const ReturnController = {
 
       // Hoàn lại tồn kho
       const [chitiet] = await db.query(
-        "SELECT masanpham, soluong FROM chitietdonhang WHERE madonhang = ?",
+        "SELECT masanpham, soluong, maluachon FROM chitietdonhang WHERE madonhang = ?",
         [yeucau.madonhang]
       );
       for (const item of chitiet) {
@@ -112,7 +112,22 @@ const ReturnController = {
           "UPDATE tonkho SET soluongton = soluongton + ? WHERE masanpham = ?",
           [item.soluong, item.masanpham]
         );
+        try {
+          await db.query(
+            "UPDATE sanpham SET soluongton = soluongton + ? WHERE masanpham = ?",
+            [item.soluong, item.masanpham]
+          );
+        } catch (e) {}
+        if (item.maluachon) {
+          try {
+            await db.query(
+              "UPDATE luachon_sanpham SET soluongton = soluongton + ? WHERE maluachon = ?",
+              [item.soluong, item.maluachon]
+            );
+          } catch (e) {}
+        }
       }
+
 
       // Cập nhật trạng thái yêu cầu
       await db.query(

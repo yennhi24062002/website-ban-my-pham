@@ -3,7 +3,7 @@ export const danhMuc = ["Tất cả", "Chăm sóc da", "Trang điểm", "Làm s�
 export const sanPhams = [
   {
     masanpham: 1,
-    ten: "Nước Hoa Hồng Klairs Không Mùi",
+    ten: "Nước Tẩy Trang Bí Đao Cocoon",
     danhMuc: "Làm sạch",
     gia: 207000,
     giagoc: null,

@@ -103,12 +103,25 @@ export function AppProvider({ children }) {
 
   // Danh sách sản phẩm đã lọc theo danh mục và từ khóa tìm kiếm
   const danhSachLoc = useMemo(() => {
+    const kw = tuKhoa.trim().toLowerCase();
     return sanPhams.filter((sp) => {
-      const dungDanhMuc = danhMucChon === "Tất cả" || sp.danhMuc === danhMucChon;
-      const dungTuKhoa = sp.ten.toLowerCase().includes(tuKhoa.toLowerCase());
+      // Nếu có nhập từ khóa tìm kiếm, tự động tìm trên toàn bộ danh mục
+      const dungDanhMuc = kw ? true : (danhMucChon === "Tất cả" || sp.danhMuc === danhMucChon);
+      if (!kw) return dungDanhMuc;
+
+      const tenSp = (sp.ten || "").toLowerCase();
+      const moTaSp = (sp.moTa || "").toLowerCase();
+      const thuongHieuSp = (sp.tenthuonghieu || "").toLowerCase();
+
+      const dungTuKhoa =
+        tenSp.includes(kw) ||
+        moTaSp.includes(kw) ||
+        thuongHieuSp.includes(kw);
+
       return dungDanhMuc && dungTuKhoa;
     });
   }, [sanPhams, danhMucChon, tuKhoa]);
+
 
   // Cập nhật sản phẩm đang xem chi tiết
   function capNhatChiTiet(sp) {
