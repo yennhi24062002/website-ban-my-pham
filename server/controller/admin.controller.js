@@ -167,12 +167,11 @@ const AdminController = {
       if (String(maluachon).startsWith("sp-")) {
         // Sản phẩm mặc định (không có biến thể) → cập nhật bảng tonkho
         const masanpham = Number(maluachon.replace("sp-", ""));
-        // Dùng INSERT ... ON DUPLICATE KEY UPDATE để xử lý cả trường hợp chưa có dòng
         await db.query(
           `INSERT INTO tonkho (masanpham, soluongton, soluongtoithieu)
            VALUES (?, ?, 5)
-           ON DUPLICATE KEY UPDATE soluongton = soluongton + VALUES(soluongton)`,
-          [masanpham, Number(soLuongNhap)]
+           ON DUPLICATE KEY UPDATE soluongton = soluongton + ?`,
+          [masanpham, Number(soLuongNhap), Number(soLuongNhap)]
         );
         const [[row]] = await db.query(
           `SELECT soluongton FROM tonkho WHERE masanpham = ?`,
@@ -192,8 +191,10 @@ const AdminController = {
         );
         if (variantRow) {
           await db.query(
-            `UPDATE tonkho SET soluongton = soluongton + ? WHERE masanpham = ?`,
-            [Number(soLuongNhap), variantRow.masanpham]
+            `INSERT INTO tonkho (masanpham, soluongton, soluongtoithieu)
+             VALUES (?, ?, 5)
+             ON DUPLICATE KEY UPDATE soluongton = soluongton + ?`,
+            [variantRow.masanpham, Number(soLuongNhap), Number(soLuongNhap)]
           );
         }
         const [[row]] = await db.query(
@@ -208,5 +209,6 @@ const AdminController = {
     }
   }
 };
+
 
 module.exports = AdminController;
