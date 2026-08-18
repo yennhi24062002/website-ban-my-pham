@@ -1,4 +1,6 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
+import API_BASE from "../../config/api";
+import { AppContext } from "../../store/AppContext";
 
 function formatTien(tien) {
   if (!tien) return "0đ";
@@ -6,6 +8,7 @@ function formatTien(tien) {
 }
 
 function PromotionManagement({ danhSachSanPham }) {
+  const { refreshProducts } = useContext(AppContext);
   const [khuyenMais, setKhuyenMais] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -25,7 +28,7 @@ function PromotionManagement({ danhSachSanPham }) {
 
   const fetchKhuyenMais = async () => {
     try {
-      const res = await fetch("http://localhost:8000/api/khuyenmai");
+      const res = await fetch(`${API_BASE}/khuyenmai`);
       if (res.ok) {
         const data = await res.json();
         setKhuyenMais(data);
@@ -59,10 +62,17 @@ function PromotionManagement({ danhSachSanPham }) {
     
     setLoading(true);
     try {
-      const res = await fetch("http://localhost:8000/api/khuyenmai", {
+      const payload = {
+        tenkhuyenmai: form.tenkm,
+        phantramgiam: Number(form.mucgiam || 0),
+        ngaybatdau: form.ngaybatdau || null,
+        ngayketthuc: form.ngayketthuc || null,
+        sanphamIds: form.sanphamIds
+      };
+      const res = await fetch(`${API_BASE}/khuyenmai`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(form)
+        body: JSON.stringify(payload)
       });
       if (res.ok) {
         alert("Đã tạo chương trình khuyến mãi thành công!");
@@ -72,6 +82,7 @@ function PromotionManagement({ danhSachSanPham }) {
           ngaybatdau: "", ngayketthuc: "", sanphamIds: []
         });
         fetchKhuyenMais();
+        if (refreshProducts) await refreshProducts();
       } else {
         alert("Có lỗi xảy ra khi tạo khuyến mãi.");
       }
@@ -86,10 +97,11 @@ function PromotionManagement({ danhSachSanPham }) {
   const handleDelete = async (makm) => {
     if (!window.confirm("Bạn có chắc muốn xóa khuyến mãi này?")) return;
     try {
-      const res = await fetch(`http://localhost:8000/api/khuyenmai/${makm}`, { method: "DELETE" });
+      const res = await fetch(`${API_BASE}/khuyenmai/${makm}`, { method: "DELETE" });
       if (res.ok) {
         alert("Xóa thành công!");
         fetchKhuyenMais();
+        if (refreshProducts) await refreshProducts();
       }
     } catch (err) {
       console.error(err);

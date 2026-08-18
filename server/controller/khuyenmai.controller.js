@@ -30,14 +30,19 @@ const KhuyenMaiController = {
     }
   },
 
-  // Tạo khuyến mãi mới
   async create(req, res) {
     try {
-      const { tenkhuyenmai, phantramgiam, ngaybatdau, ngayketthuc, sanphamIds } = req.body;
+      const tenkhuyenmai = req.body.tenkhuyenmai || req.body.tenkm;
+      const phantramgiam = req.body.phantramgiam || req.body.mucgiam || 0;
+      const { ngaybatdau, ngayketthuc, sanphamIds } = req.body;
+
+      if (!tenkhuyenmai) {
+        return res.status(400).json({ message: "Vui lòng nhập tên chương trình khuyến mãi!" });
+      }
 
       const [result] = await db.query(
         "INSERT INTO khuyenmai (tenkhuyenmai, phantramgiam, ngaybatdau, ngayketthuc, trangthai) VALUES (?, ?, COALESCE(?, NOW()), COALESCE(?, DATE_ADD(NOW(), INTERVAL 30 DAY)), 'hoatdong')",
-        [tenkhuyenmai, phantramgiam || 0, ngaybatdau || null, ngayketthuc || null]
+        [tenkhuyenmai, phantramgiam, ngaybatdau || null, ngayketthuc || null]
       );
 
       const makhuyenmai = result.insertId;
