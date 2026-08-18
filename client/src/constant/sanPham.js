@@ -35,7 +35,7 @@ export const sanPhams = [
     thanhphan: "Thành phần chính:\n• Bí đao: Làm mát, làm giảm nhiệt, ngăn ngừa và làm dịu các nốt mụn trứng cá.\n• Rau má: Tăng sinh collagen, làm dịu các vết đỏ và phục hồi tổn thương da.\n• Tinh dầu tràm trà: Sát khuẩn, chống viêm mụn hiệu quả.\n• Betaine: Giữ ẩm vượt trội.\n• NatraGem™ S150: Nguồn gốc 100% thực vật, chứng nhận hữu cơ Ecocert.",
     hdsd: "Thấm đều dung dịch ra miếng bông tẩy trang cotton. Nhẹ nhàng lau sạch khắp vùng mặt, mắt và môi theo chiều từ trong ra ngoài, từ dưới lên trên. Không cần rửa lại với nước.",
     tileban: 51,
-    khuyenmai: "Bill 399K Cocoon Tặng Kèm Băng Đô",
+    khuyenmai: "",
     luachon: [
       { maluachon: 1, mausac: "Mặc định", loai: "Tẩy trang", dungtich: "500ml", giaban: 292000, soluongton: 30, hinh: "/hinhanh/cocoon_cleansing_water.png" },
       { maluachon: 2, mausac: "Mặc định", loai: "Tẩy trang", dungtich: "150ml", giaban: 145000, soluongton: 15, hinh: "/hinhanh/cocoon_cleansing_water.png" }
@@ -54,7 +54,7 @@ export const sanPhams = [
     thanhphan: "Thành phần chính:\n• Sodium Hyaluronate: Cấp ẩm sâu vượt trội.\n• Phyto-Oligo: Nuôi dưỡng màng ẩm tự nhiên của da.\n• Chiết xuất rau má & Nha đam: Làm dịu mát da tức thì.\n• Lysine HCL, Proline: Phức hợp axit amin bảo vệ da toàn diện.",
     hdsd: "Sau khi rửa mặt sạch, đổ vài giọt toner ra bông tẩy trang hoặc trực tiếp ra lòng bàn tay rồi vỗ nhẹ đều khắp mặt cho dưỡng chất thẩm thấu.",
     tileban: 63,
-    khuyenmai: "Bill Klairs từ 399K Tặng Nước Hoa Hồng 30ml",
+    khuyenmai: "",
     luachon: [
       { maluachon: 3, mausac: "Mặc định", loai: "Nước hoa hồng", dungtich: "180ml", giaban: 207000, soluongton: 30, hinh: "/hinhanh/klairs_toner.png" },
       { maluachon: 4, mausac: "Mặc định", loai: "Nước hoa hồng", dungtich: "250ml", giaban: 290000, soluongton: 15, hinh: "/hinhanh/klairs_toner.png" }
@@ -73,7 +73,7 @@ export const sanPhams = [
     thanhphan: "Thành phần chính:\n• Công nghệ Micellar Water: Gom và hút sạch cặn trang điểm.\n• Glycerin: Cấp ẩm nuôi dưỡng màng biểu bì.\n• Nước khoáng Pháp: Bổ sung khoáng chất cho da.",
     hdsd: "Thấm một lượng vừa đủ ra bông tẩy trang rồi nhẹ nhàng lau sạch mặt, mắt và môi. Không cần rửa lại với nước.",
     tileban: 63,
-    khuyenmai: "Làm sạch tươi mát cho da dầu, hỗn hợp",
+    khuyenmai: "",
     luachon: [
       { maluachon: 5, mausac: "Mặc định", loai: "Tẩy trang", dungtich: "400ml", giaban: 140000, soluongton: 40, hinh: "/hinhanh/loreal_micellar_water.png" }
     ]
@@ -91,7 +91,7 @@ export const sanPhams = [
     thanhphan: "Thành phần chính:\n• Chiết xuất rau má Madagascar (35.8%): Giảm sưng mụn, tăng sinh tế bào phục hồi da.\n• Kẽm Oxit & Titanium Dioxide: Bảo vệ vật lý khỏi tia UVA/UVB.\n• Niacinamide: Làm mờ thâm mụn, dưỡng sáng da.",
     hdsd: "Lấy một lượng kem vừa đủ thoa đều khắp mặt và cổ ở bước cuối cùng của chu trình dưỡng da buổi sáng. Nên thoa trước khi ra ngoài 20 phút.",
     tileban: 63,
-    khuyenmai: "Bill Skin1004 từ 399k Tặng Kem Rau Má 20ml",
+    khuyenmai: "",
     luachon: [
       { maluachon: 6, mausac: "Mặc định", loai: "Kem chống nắng", dungtich: "50ml", giaban: 252000, soluongton: 25, hinh: "/hinhanh/skin1004_sunscreen.png" }
     ]
