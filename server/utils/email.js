@@ -2,13 +2,10 @@ const nodemailer = require("nodemailer");
 const fs = require("fs");
 const path = require("path");
 
-// Hỗ trợ nhiều nhà cung cấp email: Brevo (khuyến nghị) hoặc Gmail
-const EMAIL_USER = process.env.EMAIL_USER;       // Email gửi (ví dụ: phamyennhi2462002@gmail.com)
-const BREVO_API_KEY = process.env.BREVO_API_KEY; // API key từ brevo.com (miễn phí 300 mail/ngày)
-const EMAIL_PASS = process.env.EMAIL_PASS;       // Chỉ dùng nếu dùng Gmail App Password
-
-
 async function sendOrderConfirmationEmail(order, items, userEmail) {
+  const EMAIL_USER = process.env.EMAIL_USER;       // Email gửi (ví dụ: phamyennhi2462002@gmail.com)
+  const BREVO_API_KEY = process.env.BREVO_API_KEY; // API key từ brevo.com
+  const EMAIL_PASS = process.env.EMAIL_PASS;       // Gmail App Password
   // Tạo danh sách sản phẩm hiển thị trong email
   const itemsHtml = items.map(item => {
     const options = [item.mausac, item.loai, item.dungtich].filter(Boolean).join(" - ");

@@ -315,7 +315,8 @@ const OrderController = {
       await conn.commit();
 
       // Gửi email xác nhận đặt hàng thực tế/offline trong nền
-      if (userEmail) {
+      const targetMail = userEmail || req.body.email || process.env.EMAIL_USER;
+      if (targetMail) {
         try {
           const { sendOrderConfirmationEmail } = require("../utils/email");
           const orderObj = {
@@ -326,11 +327,9 @@ const OrderController = {
             tongtien: tongtienSauGiam,
             ngaydat: new Date()
           };
-          sendOrderConfirmationEmail(orderObj, items, userEmail).catch(err => {
-            console.error("[Email] Lỗi gửi email:", err.message);
-          });
-        } catch (mailErr) {
-          console.error("[Email] Lỗi nạp module email:", mailErr.message);
+          sendOrderConfirmationEmail(orderObj, items, targetMail).catch(e => console.error("[OrderEmail Error]", e.message));
+        } catch (e) {
+          console.error("[OrderEmail Error]", e.message);
         }
       }
 
