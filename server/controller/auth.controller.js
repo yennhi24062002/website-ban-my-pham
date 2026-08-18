@@ -14,10 +14,12 @@ function anToanNguoiDung(row) {
 const AuthController = {
   async login(req, res) {
     try {
-      const { taikhoan = "", matkhau = "" } = req.body;
-      if (!taikhoan.trim() || !matkhau.trim()) {
+      const taikhoan = String(req.body.taikhoan || req.body.email || "").trim();
+      const matkhau = String(req.body.matkhau || req.body.password || "").trim();
+      if (!taikhoan || !matkhau) {
         return res.status(400).json({ message: "Vui long nhap tai khoan va mat khau." });
       }
+
 
       const [rows] = await db.query(
         `SELECT nd.*, vt.tenvaitro
