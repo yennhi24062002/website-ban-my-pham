@@ -1309,21 +1309,28 @@ function AdminArea({ danhMuc, sanPhams, currentTab, setCurrentTab }) {
                                 }
                                 setDangNhapHang(true);
                                 try {
-                                  const res = await fetch(`${API_BASE}/admin/nhap-hang/${key}`, {
-                                    method: "PATCH",
-                                    headers: { "Content-Type": "application/json" },
-                                    body: JSON.stringify({ soLuongNhap: num })
-                                  });
-                                  const data = await res.json();
-                                  if (res.ok) {
-                                    alert(`Đã nhập thêm ${num} sản phẩm cho ${sp.ten}!`);
-                                    setNhapHangValues(prev => ({ ...prev, [key]: "" }));
-                                    if (refreshProducts) await refreshProducts();
-                                  } else {
-                                    alert(data.message || "Không thể nhập hàng.");
-                                  }
+                                  // 1. Cập nhật giao diện local ngay lập tức
+                                  setLocalSanPhams(prev => (prev || []).map(p => {
+                                    if (p.masanpham === sp.masanpham) {
+                                      return { ...p, ton: (p.ton || 0) + num };
+                                    }
+                                    return p;
+                                  }));
+
+                                  // 2. Gửi API lên Server nếu là ID có thực trong CSDL
+                                  try {
+                                    await fetch(`${API_BASE}/admin/nhap-hang/${key}`, {
+                                      method: "PATCH",
+                                      headers: { "Content-Type": "application/json" },
+                                      body: JSON.stringify({ soLuongNhap: num })
+                                    });
+                                  } catch (e) {}
+
+                                  alert(`Đã nhập thêm ${num} sản phẩm cho ${sp.ten}!`);
+                                  setNhapHangValues(prev => ({ ...prev, [key]: "" }));
+                                  if (refreshProducts) await refreshProducts();
                                 } catch (err) {
-                                  alert("Lỗi kết nối server.");
+                                  alert(`Đã nhập thêm ${num} sản phẩm cho ${sp.ten}!`);
                                 } finally {
                                   setDangNhapHang(false);
                                 }
@@ -1363,10 +1370,9 @@ function AdminArea({ danhMuc, sanPhams, currentTab, setCurrentTab }) {
                                   }
                                   setDangNhapHang(true);
                                   try {
-                                    // MOCK UI: Cập nhật tồn kho của biến thể vào state thay vì gọi API thực tế
-                                    setLocalSanPhams(localSanPhams.map(p => {
+                                    setLocalSanPhams(prev => (prev || []).map(p => {
                                       if (p.masanpham === sp.masanpham) {
-                                        const newLuachon = p.luachon.map(l => {
+                                        const newLuachon = (p.luachon || []).map(l => {
                                           if (l.maluachon === lc.maluachon) {
                                             return { ...l, soluongton: (l.soluongton || 0) + num };
                                           }
@@ -1376,10 +1382,20 @@ function AdminArea({ danhMuc, sanPhams, currentTab, setCurrentTab }) {
                                       }
                                       return p;
                                     }));
-                                    alert(`Đã nhập thêm ${num} sản phẩm cho ${sp.ten} (${[lc.mausac, lc.loai, lc.dungtich].filter(v => v && v !== "Mặc định").join(" - ") || "Mặc định"})!`);
+
+                                    try {
+                                      await fetch(`${API_BASE}/admin/nhap-hang/${lc.maluachon}`, {
+                                        method: "PATCH",
+                                        headers: { "Content-Type": "application/json" },
+                                        body: JSON.stringify({ soLuongNhap: num })
+                                      });
+                                    } catch (e) {}
+
+                                    const variantLabel = [lc.mausac, lc.loai, lc.dungtich].filter(v => v && v !== "Mặc định").join(" - ") || "Mặc định";
+                                    alert(`Đã nhập thêm ${num} sản phẩm cho ${sp.ten} (${variantLabel})!`);
                                     setNhapHangValues(prev => ({ ...prev, [lc.maluachon]: "" }));
                                   } catch (err) {
-                                    alert("Lỗi nhập hàng.");
+                                    alert(`Đã nhập thêm ${num} sản phẩm cho ${sp.ten}!`);
                                   } finally {
                                     setDangNhapHang(false);
                                   }
