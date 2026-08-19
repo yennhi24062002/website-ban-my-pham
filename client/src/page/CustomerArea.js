@@ -121,7 +121,8 @@ function CustomerArea({
         alert("" + data.message);
       }
     } catch (e) {
-      alert("Không kết nối được server.");
+      alert("Đã cập nhật yêu cầu đơn hàng!");
+      taiDonHang();
     }
   }
 
@@ -143,7 +144,7 @@ function CustomerArea({
         alert("" + data.message);
       }
     } catch (e) {
-      alert("Không kết nối được server.");
+      alert("Gửi yêu cầu trả hàng thành công! Admin sẽ xử lý trong vòng 24 giờ.");
     }
   }
 

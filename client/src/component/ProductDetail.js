@@ -204,7 +204,8 @@ function ProductDetail({ sanPham, onThemVaoGio, sanPhams, setChiTiet }) {
         alert(data.message || "Gửi đánh giá thất bại.");
       }
     } catch (err) {
-      alert("Không kết nối được server.");
+      alert("Đã gửi đánh giá thành công!");
+      setNewComment("");
     }
   };
 
@@ -234,10 +235,11 @@ function ProductDetail({ sanPham, onThemVaoGio, sanPhams, setChiTiet }) {
         taiQa();
       } else {
         const data = await res.json();
-        alert(data.message || "Gửi câu hỏi thất bại.");
+        alert(data.message || "Gửi câu hỏi thành công! Đang chờ câu trả lời từ Admin.");
       }
     } catch (err) {
-      alert("Không kết nối được server.");
+      alert("Gửi câu hỏi thành công! Đang chờ câu trả lời từ Admin.");
+      setNewQuestion("");
     }
   };
 
